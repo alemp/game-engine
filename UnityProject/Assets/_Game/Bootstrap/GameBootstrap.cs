@@ -63,9 +63,9 @@ namespace GameEngine.Game.Bootstrap
                 foreach (var (id, amount) in _gameLoader.GetResourceDefinitions())
                     _idleModule.RegisterResource(id, amount);
 
-                foreach (var (inputs, outputId, outputAmount) in _gameLoader.GetProductionRules())
+                foreach (var (inputs, outputId, outputAmount, multiplier) in _gameLoader.GetProductionRules())
                 {
-                    _idleModule.AddProductionRule(new ProductionRule(inputs, outputId, outputAmount));
+                    _idleModule.AddProductionRule(new ProductionRule(inputs, outputId, outputAmount, multiplier));
                 }
             }
             catch (Exception ex)

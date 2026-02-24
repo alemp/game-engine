@@ -23,7 +23,7 @@ Checkboxes track implementation progress. Update this file when completing each 
 - [x] Production chains (multiple inputs → one output)
 - [x] Generators (no input, output only)
 - [x] Resource registration and GetResource/AddResource/TrySpend
-- [ ] Multipliers
+- [x] Multipliers
 - [ ] Configurable exponential curves
 
 ### Theme System
@@ -116,7 +116,7 @@ From MASTER_SPEC §6:
 - [ ] Upgrades (linear, multiplicative, conditional, progressive unlocks)
 - [ ] Prestige (partial reset, special currency, permanent boost, configurable formula)
 - [ ] Localization loading (JSON → runtime strings, fallback to English)
-- [ ] Multipliers in production
+- [x] Multipliers in production
 - [ ] Configurable exponential curves
 
 ---

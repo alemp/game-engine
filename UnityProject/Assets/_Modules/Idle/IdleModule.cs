@@ -74,7 +74,7 @@ namespace GameEngine.Modules.Idle
                     foreach (var (resId, amount) in rule.Inputs)
                         TrySpend(resId, amount);
 
-                    AddResource(rule.OutputId, rule.OutputAmount);
+                    AddResource(rule.OutputId, rule.GetEffectiveOutput());
                 }
             }
         }
@@ -112,7 +112,7 @@ namespace GameEngine.Modules.Idle
                 foreach (var (resId, amount) in rule.Inputs)
                     TrySpend(resId, amount);
 
-                AddResource(rule.OutputId, rule.OutputAmount);
+                AddResource(rule.OutputId, rule.GetEffectiveOutput());
             }
         }
 
@@ -139,15 +139,24 @@ namespace GameEngine.Modules.Idle
         public IReadOnlyList<(string ResourceId, BigNumber Amount)> Inputs { get; }
         public string OutputId { get; }
         public BigNumber OutputAmount { get; }
+        public double Multiplier { get; }
 
         public ProductionRule(
             IReadOnlyList<(string ResourceId, BigNumber Amount)> inputs,
             string outputId,
-            BigNumber outputAmount)
+            BigNumber outputAmount,
+            double multiplier = 1.0)
         {
             Inputs = inputs ?? throw new ArgumentNullException(nameof(inputs));
             OutputId = outputId ?? throw new ArgumentNullException(nameof(outputId));
             OutputAmount = outputAmount;
+            Multiplier = multiplier > 0 ? multiplier : 1.0;
         }
+
+        /// <summary>
+        /// Effective output after applying multiplier.
+        /// </summary>
+        public BigNumber GetEffectiveOutput() =>
+            OutputAmount * BigNumber.FromDouble(Multiplier);
     }
 }

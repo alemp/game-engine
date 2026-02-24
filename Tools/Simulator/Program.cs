@@ -47,8 +47,8 @@ var idleModule = new IdleModule(eventBus, scheduler);
 foreach (var (id, amount) in loader.GetResourceDefinitions())
     idleModule.RegisterResource(id, amount);
 
-foreach (var (inputs, outputId, outputAmount) in loader.GetProductionRules())
-    idleModule.AddProductionRule(new ProductionRule(inputs, outputId, outputAmount));
+foreach (var (inputs, outputId, outputAmount, multiplier) in loader.GetProductionRules())
+    idleModule.AddProductionRule(new ProductionRule(inputs, outputId, outputAmount, multiplier));
 
 idleModule.SimulateTicks(ticks);
 

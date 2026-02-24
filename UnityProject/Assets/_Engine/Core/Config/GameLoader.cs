@@ -74,10 +74,10 @@ namespace GameEngine.Core.Config
         /// <summary>
         /// Returns production rules for the bootstrap to add.
         /// </summary>
-        public IReadOnlyList<(IReadOnlyList<(string ResourceId, BigNumber Amount)> Inputs, string OutputId, BigNumber OutputAmount)> GetProductionRules()
+        public IReadOnlyList<(IReadOnlyList<(string ResourceId, BigNumber Amount)> Inputs, string OutputId, BigNumber OutputAmount, double Multiplier)> GetProductionRules()
         {
             var schema = LoadProduction();
-            var list = new List<(IReadOnlyList<(string, BigNumber)>, string, BigNumber)>();
+            var list = new List<(IReadOnlyList<(string, BigNumber)>, string, BigNumber, double)>();
             foreach (var prod in schema.Productions ?? new List<ProductionEntry>())
             {
                 var inputs = new List<(string, BigNumber)>();
@@ -85,7 +85,8 @@ namespace GameEngine.Core.Config
                 {
                     inputs.Add((input.ResourceId, BigNumber.FromDouble(input.Amount)));
                 }
-                list.Add((inputs, prod.OutputId, BigNumber.FromDouble(prod.OutputAmount)));
+                var multiplier = prod.Multiplier > 0 ? prod.Multiplier : 1.0;
+                list.Add((inputs, prod.OutputId, BigNumber.FromDouble(prod.OutputAmount), multiplier));
             }
             return list;
         }
