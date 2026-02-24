@@ -49,6 +49,13 @@
 - **GameHUD** – UI Toolkit HUD displaying resource values
 - **SampleIdleGame** – Full JSON config and content
 
+## CLI Tools
+
+- **Validator** – Validate game.json: `dotnet run --project Tools/Validator -- <path-to-game-folder>`
+- **Simulator** – Run economy progression: `dotnet run --project Tools/Simulator -- <path-to-game-folder> <1h|24h|7d>`
+
+Example: `dotnet run --project Tools/Simulator -- UnityProject/Assets/_Games/SampleIdleGame 24h`
+
 ## Next Steps
 
 See [docs/NEXT_STEPS.md](NEXT_STEPS.md) for the full implementation tracker with checkboxes.

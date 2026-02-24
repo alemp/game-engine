@@ -42,7 +42,7 @@ Checkboxes track implementation progress. Update this file when completing each 
 ### Tools
 
 - [x] Validator CLI (standalone, game.json validation)
-- [ ] Simulator CLI (progression 1h / 24h / 7d)
+- [x] Simulator CLI (progression 1h / 24h / 7d)
 
 ### Sample Game
 
