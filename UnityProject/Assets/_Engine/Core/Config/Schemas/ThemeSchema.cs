@@ -18,6 +18,51 @@ namespace GameEngine.Core.Config.Schemas
 
         [JsonProperty("typography")]
         public ThemeTypographySchema Typography { get; set; }
+
+        [JsonProperty("shadows")]
+        public ThemeShadowSchema Shadows { get; set; }
+
+        [JsonProperty("cards")]
+        public ThemeCardSchema Cards { get; set; }
+
+        [JsonProperty("animation")]
+        public ThemeAnimationSchema Animation { get; set; }
+    }
+
+    public sealed class ThemeShadowSchema
+    {
+        [JsonProperty("color")]
+        public string Color { get; set; } = "#00000040";
+
+        [JsonProperty("offsetX")]
+        public float OffsetX { get; set; } = 0f;
+
+        [JsonProperty("offsetY")]
+        public float OffsetY { get; set; } = 2f;
+
+        [JsonProperty("blur")]
+        public float Blur { get; set; } = 4f;
+    }
+
+    public sealed class ThemeCardSchema
+    {
+        [JsonProperty("background")]
+        public string Background { get; set; } = "#252530";
+
+        [JsonProperty("borderColor")]
+        public string BorderColor { get; set; } = "#3a3a45";
+
+        [JsonProperty("borderWidth")]
+        public float BorderWidth { get; set; } = 1f;
+    }
+
+    public sealed class ThemeAnimationSchema
+    {
+        [JsonProperty("durationMs")]
+        public int DurationMs { get; set; } = 200;
+
+        [JsonProperty("feedbackDurationMs")]
+        public int FeedbackDurationMs { get; set; } = 150;
     }
 
     public sealed class ThemeColorsSchema

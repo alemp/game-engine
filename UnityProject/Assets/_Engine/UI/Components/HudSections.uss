@@ -1,0 +1,56 @@
+/* HUD section headers and card layout - Phase A */
+
+.hud-section {
+    flex-direction: column;
+    margin-bottom: var(--spacing-md, 16px);
+}
+
+.hud-section__header {
+    font-size: var(--font-body, 16px);
+    font-weight: bold;
+    color: var(--color-text, rgb(255, 255, 255));
+    margin-bottom: var(--spacing-sm, 8px);
+    padding-bottom: var(--spacing-xs, 4px);
+}
+
+.hud-section__content {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.hud-section__content--card {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+}
+
+.hud-card {
+    background-color: var(--color-card-bg, rgb(37, 37, 48));
+    border-radius: var(--radius-card, 12px);
+    border-width: 1px;
+    border-color: var(--color-card-border, rgb(58, 58, 69));
+    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+    margin-right: var(--spacing-sm, 8px);
+    margin-bottom: var(--spacing-sm, 8px);
+}
+
+.resource-display--card {
+    background-color: var(--color-card-bg, rgb(37, 37, 48));
+    border-radius: var(--radius-card, 12px);
+    border-width: 1px;
+    border-color: var(--color-card-border, rgb(58, 58, 69));
+    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+    margin-right: var(--spacing-sm, 8px);
+    margin-bottom: var(--spacing-sm, 8px);
+}
+
+.upgrade-button--card {
+    background-color: var(--color-card-bg, rgb(37, 37, 48));
+    border-radius: var(--radius-card, 12px);
+    border-width: 1px;
+    border-color: var(--color-card-border, rgb(58, 58, 69));
+    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+    margin-right: var(--spacing-sm, 8px);
+    margin-bottom: var(--spacing-sm, 8px);
+}

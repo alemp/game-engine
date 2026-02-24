@@ -1,7 +1,10 @@
 {
   "resource.gold": "Ouro",
+  "resource.souls": "Almas",
   "upgrade.gold_multiplier_1": "2× Produção de Ouro",
   "upgrade.gold_multiplier_2": "1.5× Ouro por nível",
   "nav.main": "Principal",
-  "nav.upgrades": "Melhorias"
+  "nav.upgrades": "Melhorias",
+  "hud.section.resources": "Recursos",
+  "hud.section.upgrades": "Melhorias"
 }

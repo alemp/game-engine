@@ -93,10 +93,10 @@ Checkboxes track implementation progress. Update this file when completing each 
 
 ### Phase A – Foundation
 
-- [ ] Extend theme.json (shadows, card styles, animation durations)
-- [ ] Card-based layout for resources and upgrades
-- [ ] Section headers (Resources, Upgrades, Actions)
-- [ ] hud.json: section order, layout options
+- [x] Extend theme.json (shadows, card styles, animation durations)
+- [x] Card-based layout for resources and upgrades
+- [x] Section headers (Resources, Upgrades, Actions)
+- [x] hud.json: section order, layout options
 
 ### Phase B – Icons & Production
 

@@ -17,6 +17,11 @@ namespace GameEngine.UI.Theme
         /// <summary>
         /// Applies theme to the root and descendant elements using direct style properties.
         /// </summary>
+        private const string HudSectionHeaderClass = "hud-section__header";
+        private const string HudCardClass = "hud-card";
+        private const string ResourceDisplayCardClass = "resource-display--card";
+        private const string UpgradeButtonCardClass = "upgrade-button--card";
+
         public static void Apply(VisualElement root, ThemeSchema theme)
         {
             if (root == null || theme == null)
@@ -50,6 +55,32 @@ namespace GameEngine.UI.Theme
                         el.style.color = c;
                     el.style.fontSize = theme.Typography.Numbers;
                 });
+                root.Query().Class(HudSectionHeaderClass).ForEach(el =>
+                {
+                    if (TryParseColor(theme.Colors.Text, out var c))
+                        el.style.color = c;
+                    el.style.fontSize = theme.Typography.Body;
+                });
+            }
+
+            if (theme.Cards != null && theme.Radii != null)
+            {
+                var cardBg = TryParseColor(theme.Cards.Background, out var bg) ? bg : (Color?)null;
+                var cardBorder = TryParseColor(theme.Cards.BorderColor, out var border) ? border : (Color?)null;
+
+                void ApplyCard(VisualElement el)
+                {
+                    if (cardBg.HasValue)
+                        el.style.backgroundColor = cardBg.Value;
+                    if (cardBorder.HasValue)
+                        el.style.borderTopColor = el.style.borderBottomColor = el.style.borderLeftColor = el.style.borderRightColor = cardBorder.Value;
+                    el.style.borderTopWidth = el.style.borderBottomWidth = el.style.borderLeftWidth = el.style.borderRightWidth = theme.Cards.BorderWidth;
+                    el.style.borderTopLeftRadius = el.style.borderTopRightRadius = el.style.borderBottomLeftRadius = el.style.borderBottomRightRadius = theme.Radii.Card;
+                }
+
+                root.Query().Class(HudCardClass).ForEach(ApplyCard);
+                root.Query().Class(ResourceDisplayCardClass).ForEach(ApplyCard);
+                root.Query().Class(UpgradeButtonCardClass).ForEach(ApplyCard);
             }
         }
 

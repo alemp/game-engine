@@ -16,6 +16,24 @@ namespace GameEngine.Core.Config.Schemas
 
         [JsonProperty("layout")]
         public string Layout { get; set; } = "wrap";
+
+        /// <summary>
+        /// Section order: "resources", "upgrades", "actions". Defines display order and which sections to show.
+        /// </summary>
+        [JsonProperty("sectionOrder")]
+        public List<string> SectionOrder { get; set; }
+
+        /// <summary>
+        /// Section label keys for localization. Keys: "resources", "upgrades", "actions".
+        /// </summary>
+        [JsonProperty("sectionLabels")]
+        public Dictionary<string, string> SectionLabels { get; set; }
+
+        /// <summary>
+        /// Use card-based layout for resources and upgrades. "card" | "flat".
+        /// </summary>
+        [JsonProperty("cardLayout")]
+        public bool CardLayout { get; set; } = true;
     }
 
     public sealed class HudResourcesSchema

@@ -20,5 +20,20 @@
     "h1": 32,
     "body": 16,
     "numbers": 18
+  },
+  "shadows": {
+    "color": "#00000040",
+    "offsetX": 0,
+    "offsetY": 2,
+    "blur": 4
+  },
+  "cards": {
+    "background": "#252530",
+    "borderColor": "#3a3a45",
+    "borderWidth": 1
+  },
+  "animation": {
+    "durationMs": 200,
+    "feedbackDurationMs": 150
   }
 }

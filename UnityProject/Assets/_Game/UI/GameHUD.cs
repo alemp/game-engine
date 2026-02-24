@@ -21,8 +21,11 @@ namespace GameEngine.Game.UI
         private IdleModule _idleModule;
         private UpgradeModule _upgradeModule;
         private VisualElement _root;
+        private VisualElement _hudRoot;
         private VisualElement _resourceContainer;
         private VisualElement _upgradesContainer;
+        private VisualElement _sectionResources;
+        private VisualElement _sectionUpgrades;
         private bool _resourcesBound;
         private bool _upgradesBound;
 
@@ -59,8 +62,11 @@ namespace GameEngine.Game.UI
                 return;
 
             _root = root;
+            _hudRoot = _root.Q<VisualElement>("hud-root") ?? _root;
             _resourceContainer = _root.Q<VisualElement>("resource-container");
             _upgradesContainer = _root.Q<VisualElement>("upgrades-container");
+            _sectionResources = _root.Q<VisualElement>("section-resources");
+            _sectionUpgrades = _root.Q<VisualElement>("section-upgrades");
 
             if (_bootstrap.Theme != null)
                 ThemeApplier.Apply(_root, _bootstrap.Theme);
@@ -96,8 +102,11 @@ namespace GameEngine.Game.UI
             if (_root == null)
                 return;
 
+            _hudRoot = _root.Q<VisualElement>("hud-root") ?? _root;
             _resourceContainer = _root.Q<VisualElement>("resource-container");
             _upgradesContainer = _root.Q<VisualElement>("upgrades-container");
+            _sectionResources = _root.Q<VisualElement>("section-resources");
+            _sectionUpgrades = _root.Q<VisualElement>("section-upgrades");
 
             if (_bootstrap.Theme != null)
                 ThemeApplier.Apply(_root, _bootstrap.Theme);
@@ -135,7 +144,56 @@ namespace GameEngine.Game.UI
             {
                 _upgradesContainer.style.flexDirection = layout == "column" ? FlexDirection.Column : FlexDirection.Row;
                 _upgradesContainer.style.flexWrap = layout == "wrap" ? Wrap.Wrap : Wrap.NoWrap;
-                _upgradesContainer.style.display = (hud?.Upgrades?.Visible ?? true) ? DisplayStyle.Flex : DisplayStyle.None;
+                if (_sectionUpgrades != null)
+                    _sectionUpgrades.style.display = (hud?.Upgrades?.Visible ?? true) ? DisplayStyle.Flex : DisplayStyle.None;
+            }
+
+            ApplySectionHeaders();
+            ApplySectionOrder();
+        }
+
+        private void ApplySectionHeaders()
+        {
+            var hud = _bootstrap?.HudConfig;
+            var labels = hud?.SectionLabels;
+            if (labels == null)
+                return;
+
+            if (labels.TryGetValue("resources", out var resKey) && _sectionResources != null)
+            {
+                var header = _sectionResources.Q<Label>();
+                if (header != null)
+                    header.text = _bootstrap.Localization?.GetString(resKey) ?? resKey;
+            }
+
+            if (labels.TryGetValue("upgrades", out var upgKey) && _sectionUpgrades != null)
+            {
+                var header = _sectionUpgrades.Q<Label>();
+                if (header != null)
+                    header.text = _bootstrap.Localization?.GetString(upgKey) ?? upgKey;
+            }
+        }
+
+        private void ApplySectionOrder()
+        {
+            var order = _bootstrap?.HudConfig?.SectionOrder;
+            if (order == null || order.Count == 0 || _hudRoot == null)
+                return;
+
+            var resources = _sectionResources;
+            var upgrades = _sectionUpgrades;
+            if (resources == null || upgrades == null)
+                return;
+
+            resources.RemoveFromHierarchy();
+            upgrades.RemoveFromHierarchy();
+
+            foreach (var id in order)
+            {
+                if (id == "resources")
+                    _hudRoot.Add(resources);
+                else if (id == "upgrades")
+                    _hudRoot.Add(upgrades);
             }
         }
 
@@ -169,6 +227,9 @@ namespace GameEngine.Game.UI
                 {
                     ResourceId = resourceId
                 };
+
+                if (_bootstrap.HudConfig?.CardLayout ?? true)
+                    display.AddToClassList("resource-display--card");
 
                 if (_bootstrap.Localization != null)
                 {
@@ -232,6 +293,9 @@ namespace GameEngine.Game.UI
                 {
                     UpgradeId = upgradeId
                 };
+
+                if (_bootstrap.HudConfig?.CardLayout ?? true)
+                    button.AddToClassList("upgrade-button--card");
 
                 var displayKey = !string.IsNullOrEmpty(upgrade.DisplayKey)
                     ? upgrade.DisplayKey
