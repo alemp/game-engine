@@ -108,6 +108,19 @@ namespace GameEngine.Core.Config
         }
 
         /// <summary>
+        /// Loads UI config from Definitions/ui.json. Returns null if file does not exist.
+        /// </summary>
+        public UiSchema LoadUi()
+        {
+            var path = Path.Combine(_basePath, "Definitions", "ui.json");
+            if (!File.Exists(path))
+                return null;
+
+            var json = File.ReadAllText(path);
+            return JsonConvert.DeserializeObject<UiSchema>(json);
+        }
+
+        /// <summary>
         /// Loads HUD layout from Definitions/hud.json. Returns null if file does not exist.
         /// </summary>
         public HudSchema LoadHud()

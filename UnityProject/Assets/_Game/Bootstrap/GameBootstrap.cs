@@ -33,6 +33,7 @@ namespace GameEngine.Game.Bootstrap
         private GameConfigSchema _gameConfig;
         private ThemeSchema _theme;
         private HudSchema _hudConfig;
+        private UiSchema _uiConfig;
         private LocalizationService _localization;
         private IReadOnlyDictionary<string, string> _resourceDisplayKeys;
         private UpgradeModule _upgradeModule;
@@ -41,6 +42,7 @@ namespace GameEngine.Game.Bootstrap
         public UpgradeModule UpgradeModule => _upgradeModule;
         public ThemeSchema Theme => _theme;
         public HudSchema HudConfig => _hudConfig;
+        public UiSchema UiConfig => _uiConfig;
         public LocalizationService Localization => _localization;
         public IReadOnlyDictionary<string, string> ResourceDisplayKeys => _resourceDisplayKeys;
 
@@ -60,6 +62,7 @@ namespace GameEngine.Game.Bootstrap
             _gameConfig = gameConfig;
             _theme = _gameLoader.LoadTheme();
             _hudConfig = _gameLoader.LoadHud();
+            _uiConfig = _gameLoader.LoadUi();
             _localization = new LocalizationService();
             _localization.Load(configPath, GetSystemLocale());
             _resourceDisplayKeys = _gameLoader.GetResourceDisplayKeys();
@@ -247,6 +250,7 @@ namespace GameEngine.Game.Bootstrap
                 _gameConfig = gameConfig;
                 _theme = _gameLoader.LoadTheme();
                 _hudConfig = _gameLoader.LoadHud();
+                _uiConfig = _gameLoader.LoadUi();
                 _localization.Load(ResolveGameConfigPath(_gameId), GetSystemLocale());
                 _resourceDisplayKeys = _gameLoader.GetResourceDisplayKeys();
 

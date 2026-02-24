@@ -57,7 +57,7 @@ Checkboxes track implementation progress. Update this file when completing each 
 
 ### UI Templates
 
-- [ ] Screen templates from ui.json
+- [x] Screen templates from ui.json
 - [x] HUD layout configurable
 - [ ] Navigation (bottom bar, side HUD, tabs)
 - [x] ResourceDisplay bound to multiple resources dynamically

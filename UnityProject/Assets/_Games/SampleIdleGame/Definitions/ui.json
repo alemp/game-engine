@@ -1,0 +1,10 @@
+{
+  "screens": [
+    {
+      "id": "hud",
+      "template": "Game/UI/GameHUD",
+      "visible": true
+    }
+  ],
+  "defaultScreen": "hud"
+}

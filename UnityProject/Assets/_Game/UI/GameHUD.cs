@@ -61,6 +61,8 @@ namespace GameEngine.Game.UI
             if (_uiDocument == null)
                 return;
 
+            TryLoadTemplateFromConfig();
+
             _root = _uiDocument.rootVisualElement;
             if (_root == null)
                 return;
@@ -74,6 +76,19 @@ namespace GameEngine.Game.UI
             ApplyHudLayout();
             BindResourceDisplays();
             BindUpgradeButtons();
+        }
+
+        private void TryLoadTemplateFromConfig()
+        {
+            var template = _bootstrap?.UiConfig?.Screens?.Find(s => s.Id == "hud")?.Template;
+            if (string.IsNullOrEmpty(template))
+                return;
+
+            var asset = Resources.Load<VisualTreeAsset>(template);
+            if (asset == null)
+                return;
+
+            _uiDocument.visualTreeAsset = asset;
         }
 
         private void ApplyHudLayout()
