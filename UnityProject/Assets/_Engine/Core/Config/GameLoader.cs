@@ -51,7 +51,7 @@ namespace GameEngine.Core.Config
         {
             var schema = LoadResources();
             var list = new List<(string, BigNumber)>();
-            foreach (var res in schema.Resources ?? Array.Empty<ResourceEntry>())
+            foreach (var res in schema.Resources ?? new List<ResourceEntry>())
             {
                 list.Add((res.Id, BigNumber.FromDouble(res.InitialAmount)));
             }
@@ -65,10 +65,10 @@ namespace GameEngine.Core.Config
         {
             var schema = LoadProduction();
             var list = new List<(IReadOnlyList<(string, BigNumber)>, string, BigNumber)>();
-            foreach (var prod in schema.Productions ?? Array.Empty<ProductionEntry>())
+            foreach (var prod in schema.Productions ?? new List<ProductionEntry>())
             {
                 var inputs = new List<(string, BigNumber)>();
-                foreach (var input in prod.Inputs ?? Array.Empty<ProductionInput>())
+                foreach (var input in prod.Inputs ?? new List<ProductionInput>())
                 {
                     inputs.Add((input.ResourceId, BigNumber.FromDouble(input.Amount)));
                 }

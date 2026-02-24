@@ -2,6 +2,7 @@
     "name": "GameEngine.Engine.UI",
     "rootNamespace": "GameEngine.UI",
     "references": [
+        "GameEngine.Core",
         "UnityEngine.CoreModule",
         "Unity.UI"
     ],

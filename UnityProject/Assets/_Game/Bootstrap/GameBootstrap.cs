@@ -14,6 +14,7 @@ namespace GameEngine.Game.Bootstrap
     /// Bootstraps the engine: loads config, creates modules, wires dependencies.
     /// Game selection is driven by build config.
     /// </summary>
+    [DefaultExecutionOrder(-100)]
     public sealed class GameBootstrap : MonoBehaviour
     {
         [SerializeField] private string _gameId = "SampleIdleGame";
@@ -67,7 +68,7 @@ namespace GameEngine.Game.Bootstrap
 
         private void Update()
         {
-            _scheduler.Tick(Time.deltaTime);
+            _scheduler?.Tick(Time.deltaTime);
         }
 
         private void OnDestroy()

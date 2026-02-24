@@ -1,4 +1,4 @@
-using GameEngine.Core.Economy;
+using GameEngine.Game.Bootstrap;
 using GameEngine.Modules.Idle;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -19,6 +19,11 @@ namespace GameEngine.Game.UI
 
         private void OnEnable()
         {
+            TryBind();
+        }
+
+        private void TryBind()
+        {
             if (_bootstrap == null)
                 _bootstrap = FindFirstObjectByType<GameBootstrap>();
 
@@ -34,6 +39,9 @@ namespace GameEngine.Game.UI
                 return;
 
             _root = _uiDocument.rootVisualElement;
+            if (_root == null)
+                return;
+
             _goldLabel = _root.Q<Label>("gold-value");
             if (_goldLabel == null)
                 _goldLabel = _root.Q<Label>(className: "resource-display__value");
@@ -42,7 +50,10 @@ namespace GameEngine.Game.UI
         private void Update()
         {
             if (_idleModule == null || _goldLabel == null)
+            {
+                TryBind();
                 return;
+            }
 
             var gold = _idleModule.GetResource("gold");
             _goldLabel.text = gold.ToString();

@@ -1,17 +1,19 @@
 {
-    "name": "GameEngine.Game.UI",
-    "rootNamespace": "GameEngine.Game.UI",
+    "name": "GameEngine.Game.Editor",
+    "rootNamespace": "GameEngine.Game.Editor",
     "references": [
-        "GameEngine.Core",
         "GameEngine.Game.Bootstrap",
-        "GameEngine.Modules.Idle",
+        "GameEngine.Game.UI",
         "UnityEngine.CoreModule",
-        "Unity.UI"
+        "Unity.UI",
+        "UnityEditor"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
+    "overrideReferences": true,
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],

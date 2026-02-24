@@ -16,19 +16,15 @@
 
 ## Creating the Bootstrap Scene
 
+**Recommended:** Use **Tools** → **Engine** → **Setup Bootstrap Scene** to create the scene automatically. See [docs/SETUP_UNITY.md](SETUP_UNITY.md) for details.
+
+**Manual:**
 1. Create a new scene: `File` → `New Scene`
 2. Create an empty GameObject: `GameObject` → `Create Empty` → name it `GameBootstrap`
 3. In the Inspector, click `Add Component` and add `GameBootstrap` (from `GameEngine.Game.Bootstrap`)
 4. Save the scene as `Bootstrap.unity` in `Assets/_Game/Scenes/`
-5. Set it as the default scene in `File` → `Build Settings` → `Add Open Scenes`
-
-## Adding the Game HUD
-
-1. Create a UI Document: `GameObject` → `UI` → `UI Document`
-2. In the UI Document component, set **Source Asset** to `Assets/_Game/UI/GameHUD.uxml`
-3. Add the `GameHUD` component to the same GameObject
-4. Assign the **Bootstrap** reference (drag the GameBootstrap GameObject) or leave empty to auto-find
-5. Set **Panel Settings** to a default or create one for your resolution
+5. Add a UI Document with `GameHUD.uxml` and `GameHUD` component (see [SETUP_UNITY.md](SETUP_UNITY.md))
+6. Set it as the default scene in `File` → `Build Settings` → `Add Open Scenes`
 
 ## Game Config Loading
 
