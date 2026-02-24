@@ -36,6 +36,8 @@ namespace GameEngine.Game.Editor
     /// </summary>
     public sealed class ConfigHotReloadProcessor : AssetPostprocessor
     {
+        private const string GamesPath = "Assets/_Games";
+
         private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
         {
             if (!Application.isPlaying)
