@@ -16,6 +16,7 @@ namespace GameEngine.Modules.Idle
         private readonly Scheduler _scheduler;
         private readonly Dictionary<string, BigNumber> _resources = new();
         private readonly List<ProductionRule> _productionRules = new();
+        private readonly Dictionary<string, double> _productionMultipliers = new();
 
         public IReadOnlyDictionary<string, BigNumber> Resources => _resources;
 
@@ -60,6 +61,22 @@ namespace GameEngine.Modules.Idle
         }
 
         /// <summary>
+        /// Sets the upgrade multiplier for a production (e.g. 2.0 = 2x from upgrades).
+        /// </summary>
+        public void SetProductionMultiplier(string productionId, double modifier)
+        {
+            _productionMultipliers[productionId] = modifier > 0 ? modifier : 1.0;
+        }
+
+        /// <summary>
+        /// Gets the current upgrade multiplier for a production (1.0 if none).
+        /// </summary>
+        public double GetProductionMultiplier(string productionId)
+        {
+            return _productionMultipliers.TryGetValue(productionId, out var m) ? m : 1.0;
+        }
+
+        /// <summary>
         /// Runs production for the given number of ticks (e.g. for offline progress).
         /// </summary>
         public void SimulateTicks(int count)
@@ -74,7 +91,8 @@ namespace GameEngine.Modules.Idle
                     foreach (var (resId, amount) in rule.Inputs)
                         TrySpend(resId, amount);
 
-                    AddResource(rule.OutputId, rule.GetEffectiveOutput());
+                    var upgradeMult = GetProductionMultiplier(rule.Id);
+                    AddResource(rule.OutputId, rule.GetEffectiveOutput(upgradeMult));
                 }
             }
         }
@@ -112,7 +130,7 @@ namespace GameEngine.Modules.Idle
                 foreach (var (resId, amount) in rule.Inputs)
                     TrySpend(resId, amount);
 
-                AddResource(rule.OutputId, rule.GetEffectiveOutput());
+                AddResource(rule.OutputId, rule.GetEffectiveOutput(GetProductionMultiplier(rule.Id)));
             }
         }
 
@@ -136,27 +154,30 @@ namespace GameEngine.Modules.Idle
 
     public sealed class ProductionRule
     {
+        public string Id { get; }
         public IReadOnlyList<(string ResourceId, BigNumber Amount)> Inputs { get; }
         public string OutputId { get; }
         public BigNumber OutputAmount { get; }
-        public double Multiplier { get; }
+        public double BaseMultiplier { get; }
 
         public ProductionRule(
+            string id,
             IReadOnlyList<(string ResourceId, BigNumber Amount)> inputs,
             string outputId,
             BigNumber outputAmount,
-            double multiplier = 1.0)
+            double baseMultiplier = 1.0)
         {
+            Id = id ?? outputId ?? throw new ArgumentNullException(nameof(id));
             Inputs = inputs ?? throw new ArgumentNullException(nameof(inputs));
             OutputId = outputId ?? throw new ArgumentNullException(nameof(outputId));
             OutputAmount = outputAmount;
-            Multiplier = multiplier > 0 ? multiplier : 1.0;
+            BaseMultiplier = baseMultiplier > 0 ? baseMultiplier : 1.0;
         }
 
         /// <summary>
-        /// Effective output after applying multiplier.
+        /// Effective output after applying base multiplier and optional upgrade modifier.
         /// </summary>
-        public BigNumber GetEffectiveOutput() =>
-            OutputAmount * BigNumber.FromDouble(Multiplier);
+        public BigNumber GetEffectiveOutput(double upgradeMultiplier = 1.0) =>
+            OutputAmount * BigNumber.FromDouble(BaseMultiplier * upgradeMultiplier);
     }
 }

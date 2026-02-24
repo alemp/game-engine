@@ -1,11 +1,7 @@
 {
-    "name": "GameEngine.Game.Bootstrap",
-    "rootNamespace": "GameEngine.Game.Bootstrap",
-    "references": [
-        "GameEngine.Core",
-        "GameEngine.Modules.Idle","GameEngine.Modules.Upgrades",
-        "UnityEngine.CoreModule"
-    ],
+    "name": "GameEngine.Modules.Upgrades",
+    "rootNamespace": "GameEngine.Modules.Upgrades",
+    "references": ["GameEngine.Core", "GameEngine.Modules.Idle"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

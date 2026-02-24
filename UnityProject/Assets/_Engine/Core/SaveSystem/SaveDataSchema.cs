@@ -22,6 +22,9 @@ namespace GameEngine.Core.SaveSystem
 
         [JsonProperty("resources")]
         public Dictionary<string, BigNumberSaveData> Resources { get; set; }
+
+        [JsonProperty("upgrades")]
+        public Dictionary<string, int> Upgrades { get; set; }
     }
 
     public sealed class SchedulerSaveData

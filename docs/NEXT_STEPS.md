@@ -64,7 +64,7 @@ Checkboxes track implementation progress. Update this file when completing each 
 
 ### Idle Extensions
 
-- [ ] UpgradeModule (linear, multiplicative, conditional)
+- [x] UpgradeModule (linear, multiplicative, conditional)
 - [ ] PrestigeModule (partial reset, special currency, boost)
 - [ ] QuestModule
 - [ ] EventModule (temporary events)
@@ -113,7 +113,7 @@ Checkboxes track implementation progress. Update this file when completing each 
 From MASTER_SPEC §6:
 
 - [x] Offline progress (apply ticks for elapsed time on app resume)
-- [ ] Upgrades (linear, multiplicative, conditional, progressive unlocks)
+- [x] Upgrades (linear, multiplicative, conditional, progressive unlocks)
 - [ ] Prestige (partial reset, special currency, permanent boost, configurable formula)
 - [x] Localization loading (JSON → runtime strings, fallback to English)
 - [x] Multipliers in production

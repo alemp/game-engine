@@ -108,13 +108,26 @@ namespace GameEngine.Core.Economy
 
         public override int GetHashCode() => HashCode.Combine(Mantissa, Exponent);
 
+        private static readonly string[] Suffixes = { "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc" };
+
         public override string ToString()
         {
             if (Math.Abs(Mantissa) < Epsilon)
                 return "0";
+
             if (Exponent >= -2 && Exponent <= 2)
                 return ToDouble().ToString("G4", CultureInfo.InvariantCulture);
-            return $"{Mantissa:G2}e{Exponent}";
+
+            if (Exponent < 3)
+                return $"{Mantissa:G2}e{Exponent}";
+
+            var suffixIndex = Exponent / 3 - 1;
+            if (suffixIndex >= Suffixes.Length)
+                return $"{Mantissa:G2}e{Exponent}";
+
+            var scaled = Mantissa * Math.Pow(10, Exponent % 3);
+            var formatted = scaled.ToString("G3", CultureInfo.InvariantCulture);
+            return formatted + Suffixes[suffixIndex];
         }
     }
 }

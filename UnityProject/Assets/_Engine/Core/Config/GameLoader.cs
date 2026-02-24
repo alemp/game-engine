@@ -89,10 +89,10 @@ namespace GameEngine.Core.Config
         /// <summary>
         /// Returns production rules for the bootstrap to add.
         /// </summary>
-        public IReadOnlyList<(IReadOnlyList<(string ResourceId, BigNumber Amount)> Inputs, string OutputId, BigNumber OutputAmount, double Multiplier)> GetProductionRules()
+        public IReadOnlyList<(string Id, IReadOnlyList<(string ResourceId, BigNumber Amount)> Inputs, string OutputId, BigNumber OutputAmount, double Multiplier)> GetProductionRules()
         {
             var schema = LoadProduction();
-            var list = new List<(IReadOnlyList<(string, BigNumber)>, string, BigNumber, double)>();
+            var list = new List<(string, IReadOnlyList<(string, BigNumber)>, string, BigNumber, double)>();
             foreach (var prod in schema.Productions ?? new List<ProductionEntry>())
             {
                 var inputs = new List<(string, BigNumber)>();
@@ -101,9 +101,23 @@ namespace GameEngine.Core.Config
                     inputs.Add((input.ResourceId, BigNumber.FromDouble(input.Amount)));
                 }
                 var multiplier = prod.Multiplier > 0 ? prod.Multiplier : 1.0;
-                list.Add((inputs, prod.OutputId, BigNumber.FromDouble(prod.OutputAmount), multiplier));
+                var id = !string.IsNullOrEmpty(prod.Id) ? prod.Id : prod.OutputId ?? "unknown";
+                list.Add((id, inputs, prod.OutputId, BigNumber.FromDouble(prod.OutputAmount), multiplier));
             }
             return list;
+        }
+
+        /// <summary>
+        /// Loads upgrades from Content/upgrades.json. Returns null if file does not exist.
+        /// </summary>
+        public UpgradesSchema LoadUpgrades()
+        {
+            var path = Path.Combine(_basePath, "Content", "upgrades.json");
+            if (!File.Exists(path))
+                return null;
+
+            var json = File.ReadAllText(path);
+            return JsonConvert.DeserializeObject<UpgradesSchema>(json);
         }
     }
 }

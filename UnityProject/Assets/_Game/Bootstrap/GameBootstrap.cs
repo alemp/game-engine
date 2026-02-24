@@ -11,6 +11,7 @@ using GameEngine.Core.EventBus;
 using GameEngine.Core.SaveSystem;
 using GameEngine.Core.Scheduler;
 using GameEngine.Modules.Idle;
+using GameEngine.Modules.Upgrades;
 using UnityEngine;
 
 namespace GameEngine.Game.Bootstrap
@@ -33,8 +34,10 @@ namespace GameEngine.Game.Bootstrap
         private ThemeSchema _theme;
         private LocalizationService _localization;
         private IReadOnlyDictionary<string, string> _resourceDisplayKeys;
+        private UpgradeModule _upgradeModule;
 
         public IdleModule IdleModule => _idleModule;
+        public UpgradeModule UpgradeModule => _upgradeModule;
         public ThemeSchema Theme => _theme;
         public LocalizationService Localization => _localization;
         public IReadOnlyDictionary<string, string> ResourceDisplayKeys => _resourceDisplayKeys;
@@ -71,10 +74,15 @@ namespace GameEngine.Game.Bootstrap
                 foreach (var (id, amount) in _gameLoader.GetResourceDefinitions())
                     _idleModule.RegisterResource(id, amount);
 
-                foreach (var (inputs, outputId, outputAmount, multiplier) in _gameLoader.GetProductionRules())
+                foreach (var (id, inputs, outputId, outputAmount, multiplier) in _gameLoader.GetProductionRules())
                 {
-                    _idleModule.AddProductionRule(new ProductionRule(inputs, outputId, outputAmount, multiplier));
+                    _idleModule.AddProductionRule(new ProductionRule(id, inputs, outputId, outputAmount, multiplier));
                 }
+
+                _upgradeModule = new UpgradeModule(_idleModule);
+                var upgrades = _gameLoader.LoadUpgrades();
+                if (upgrades?.Upgrades != null)
+                    _upgradeModule.RegisterUpgrades(upgrades.Upgrades);
             }
             catch (Exception ex)
             {
@@ -128,6 +136,9 @@ namespace GameEngine.Game.Bootstrap
 
             if (saveData.Scheduler != null)
                 _scheduler.SetState(saveData.Scheduler.TickCount, saveData.Scheduler.AccumulatedTime);
+
+            if (_upgradeModule != null && saveData.Upgrades != null)
+                _upgradeModule.ApplyPurchasedLevels(saveData.Upgrades);
         }
 
         private void ApplyOfflineProgress(SaveDataSchema saveData)
@@ -161,6 +172,8 @@ namespace GameEngine.Game.Bootstrap
             foreach (var (id, amount) in _idleModule.GetResourceSnapshot())
                 resources[id] = SaveSystem.ToSaveData(amount);
 
+            var upgrades = _upgradeModule != null ? _upgradeModule.GetPurchasedLevels() : null;
+
             var saveData = new SaveDataSchema
             {
                 GameId = _gameId,
@@ -171,7 +184,8 @@ namespace GameEngine.Game.Bootstrap
                     TickCount = _scheduler.TickCount,
                     AccumulatedTime = _scheduler.AccumulatedTime
                 },
-                Resources = resources
+                Resources = resources,
+                Upgrades = upgrades != null ? new Dictionary<string, int>(upgrades) : null
             };
 
             try
@@ -231,6 +245,7 @@ namespace GameEngine.Game.Bootstrap
             _idleModule ??= new IdleModule(_eventBus, _scheduler);
             _idleModule.RegisterResource("gold", BigNumber.One);
             _idleModule.AddProductionRule(new ProductionRule(
+                "gold_generator",
                 System.Array.Empty<(string, BigNumber)>(),
                 "gold",
                 new BigNumber(1, 0)
