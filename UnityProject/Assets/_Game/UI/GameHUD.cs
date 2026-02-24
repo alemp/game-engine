@@ -44,6 +44,32 @@ namespace GameEngine.Game.UI
             TryBind();
         }
 
+        /// <summary>
+        /// Binds to a root element (e.g. when used with GameRoot navigation).
+        /// Call when the hud screen is shown.
+        /// </summary>
+        public void BindToRoot(VisualElement root)
+        {
+            if (root == null || _bootstrap == null)
+                return;
+
+            _idleModule = _bootstrap.IdleModule;
+            _upgradeModule = _bootstrap.UpgradeModule;
+            if (_idleModule == null)
+                return;
+
+            _root = root;
+            _resourceContainer = _root.Q<VisualElement>("resource-container");
+            _upgradesContainer = _root.Q<VisualElement>("upgrades-container");
+
+            if (_bootstrap.Theme != null)
+                ThemeApplier.Apply(_root, _bootstrap.Theme);
+
+            ApplyHudLayout();
+            BindResourceDisplays();
+            BindUpgradeButtons();
+        }
+
         private void TryBind()
         {
             if (_bootstrap == null)
@@ -54,6 +80,9 @@ namespace GameEngine.Game.UI
 
             _idleModule = _bootstrap.IdleModule;
             _upgradeModule = _bootstrap.UpgradeModule;
+
+            if (GetComponent<GameRoot>() != null)
+                return;
 
             if (_uiDocument == null)
                 _uiDocument = GetComponent<UIDocument>();

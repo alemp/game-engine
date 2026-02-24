@@ -318,14 +318,30 @@ GameObject:
   m_Component:
   - component: {fileID: 902094403}
   - component: {fileID: 902094402}
+  - component: {fileID: 902094404}
   - component: {fileID: 902094401}
   m_Layer: 0
-  m_Name: GameHUD
+  m_Name: GameRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &902094404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 902094400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22f3f16f843c44dd696c2dddf954c0a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GameEngine.Game.UI::GameEngine.Game.UI.GameRoot
+  _uiDocument: {fileID: 0}
+  _bootstrap: {fileID: 1080507414}
+  _gameHud: {fileID: 902094401}
 --- !u!114 &902094401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,7 +370,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
   m_PanelSettings: {fileID: 11400000, guid: 6bc5f04787faa459a98631c2a657a2c5, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: c4d3b4d576e6545d8b33d9bcfe6d8345, type: 3}
+  sourceAsset: {fileID: 9197481963319205126, guid: 5560074ec8bed4c739a14dec1a0fc152, type: 3}
   m_SortingOrder: 0
   m_Position: 0
   m_WorldSpaceSizeMode: 1

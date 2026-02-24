@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEngine.UIElements" xmlns:ge="GameEngine.UI.Components" editor-extension-mode="False">
+    <Style src="../../../_Engine/UI/Components/UpgradeButton.uss" />
+    <ui:VisualElement name="upgrades-root" style="flex-grow: 1; padding: 16px;">
+        <ui:VisualElement name="upgrades-container" style="flex-direction: row; flex-wrap: wrap; align-items: center;">
+            <!-- UpgradeButton elements added dynamically -->
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

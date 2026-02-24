@@ -1,4 +1,6 @@
 {
   "resource.gold": "Gold",
-  "upgrade.gold_multiplier_1": "2× Gold Production"
+  "upgrade.gold_multiplier_1": "2× Gold Production",
+  "nav.main": "Main",
+  "nav.upgrades": "Upgrades"
 }

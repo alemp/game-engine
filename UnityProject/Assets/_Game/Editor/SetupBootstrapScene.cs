@@ -12,6 +12,7 @@ namespace GameEngine.Game.Editor
     public static class SetupBootstrapScene
     {
         private const string ScenePath = "Assets/_Game/Scenes/Bootstrap.unity";
+        private const string GameRootUxmlPath = "Assets/_Game/UI/GameRoot.uxml";
         private const string GameHudUxmlPath = "Assets/_Game/UI/GameHUD.uxml";
 
         [MenuItem("Tools/Engine/Setup Bootstrap Scene")]
@@ -24,15 +25,29 @@ namespace GameEngine.Game.Editor
             var bootstrapGo = new GameObject("GameBootstrap");
             bootstrapGo.AddComponent<GameEngine.Game.Bootstrap.GameBootstrap>();
 
-            var hudGo = CreateGameHud(bootstrapGo);
-            if (hudGo != null)
+            var rootGo = CreateGameRoot(bootstrapGo);
+            if (rootGo != null)
             {
-                var hud = hudGo.GetComponent<GameEngine.Game.UI.GameHUD>();
-                if (hud != null)
+                var root = rootGo.GetComponent<GameEngine.Game.UI.GameRoot>();
+                var hud = rootGo.GetComponent<GameEngine.Game.UI.GameHUD>();
+                var bootstrap = bootstrapGo.GetComponent<GameEngine.Game.Bootstrap.GameBootstrap>();
+                if (root != null && bootstrap != null)
                 {
-                    var bootstrapField = typeof(GameEngine.Game.UI.GameHUD)
+                    var rootBootstrapField = typeof(GameEngine.Game.UI.GameRoot)
                         .GetField("_bootstrap", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    bootstrapField?.SetValue(hud, bootstrapGo.GetComponent<GameEngine.Game.Bootstrap.GameBootstrap>());
+                    rootBootstrapField?.SetValue(root, bootstrap);
+                }
+                if (hud != null && bootstrap != null)
+                {
+                    var hudBootstrapField = typeof(GameEngine.Game.UI.GameHUD)
+                        .GetField("_bootstrap", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    hudBootstrapField?.SetValue(hud, bootstrap);
+                }
+                if (root != null && hud != null)
+                {
+                    var hudField = typeof(GameEngine.Game.UI.GameRoot)
+                        .GetField("_gameHud", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    hudField?.SetValue(root, hud);
                 }
             }
 
@@ -50,26 +65,39 @@ namespace GameEngine.Game.Editor
                 AssetDatabase.CreateFolder("Assets/_Game", "Scenes");
         }
 
-        private static GameObject CreateGameHud(GameObject bootstrapGo)
+        private static GameObject CreateGameRoot(GameObject bootstrapGo)
         {
-            var uxml = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(GameHudUxmlPath);
-            if (uxml == null)
+            var rootUxml = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(GameRootUxmlPath);
+            if (rootUxml == null)
             {
-                Debug.LogWarning($"[Engine] GameHUD.uxml not found at {GameHudUxmlPath}. Create UI Document manually.");
-                return null;
+                var hudUxml = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(GameHudUxmlPath);
+                if (hudUxml == null)
+                {
+                    Debug.LogWarning("[Engine] GameRoot.uxml and GameHUD.uxml not found. Create UI Document manually.");
+                    return null;
+                }
+                var hudGo = new GameObject("GameHUD");
+                var hudDoc = hudGo.AddComponent<UIDocument>();
+                hudDoc.visualTreeAsset = hudUxml;
+                var hudPanel = FindOrCreatePanelSettings();
+                if (hudPanel != null)
+                    hudDoc.panelSettings = hudPanel;
+                hudGo.AddComponent<GameEngine.Game.UI.GameHUD>();
+                return hudGo;
             }
 
-            var hudGo = new GameObject("GameHUD");
-            var uiDocument = hudGo.AddComponent<UIDocument>();
-            uiDocument.visualTreeAsset = uxml;
+            var rootGo = new GameObject("GameRoot");
+            var rootDoc = rootGo.AddComponent<UIDocument>();
+            rootDoc.visualTreeAsset = rootUxml;
 
-            var panelSettings = FindOrCreatePanelSettings();
-            if (panelSettings != null)
-                uiDocument.panelSettings = panelSettings;
+            var rootPanel = FindOrCreatePanelSettings();
+            if (rootPanel != null)
+                rootDoc.panelSettings = rootPanel;
 
-            hudGo.AddComponent<GameEngine.Game.UI.GameHUD>();
+            rootGo.AddComponent<GameEngine.Game.UI.GameRoot>();
+            rootGo.AddComponent<GameEngine.Game.UI.GameHUD>();
 
-            return hudGo;
+            return rootGo;
         }
 
         private static PanelSettings FindOrCreatePanelSettings()

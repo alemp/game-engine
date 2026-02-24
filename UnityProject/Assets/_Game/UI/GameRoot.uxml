@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="../../_Engine/UI/Components/NavigationBar.uss" />
+    <ui:VisualElement name="app-root" style="flex-grow: 1; flex-direction: column;">
+        <ui:VisualElement name="content-slot" style="flex-grow: 1; flex-direction: column;">
+            <!-- Screen content injected here -->
+        </ui:VisualElement>
+        <ui:VisualElement name="nav-bar" class="nav-bar">
+            <!-- Nav buttons added dynamically -->
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -59,7 +59,7 @@ Checkboxes track implementation progress. Update this file when completing each 
 
 - [x] Screen templates from ui.json
 - [x] HUD layout configurable
-- [ ] Navigation (bottom bar, side HUD, tabs)
+- [x] Navigation (bottom bar, side HUD, tabs)
 - [x] ResourceDisplay bound to multiple resources dynamically
 - [x] Upgrade UI (purchase buttons bound to UpgradeModule.TryPurchase)
 

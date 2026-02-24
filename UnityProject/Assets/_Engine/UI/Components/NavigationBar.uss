@@ -1,0 +1,30 @@
+.nav-bar {
+    flex-shrink: 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+}
+
+.nav-bar--vertical {
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.nav-bar__item {
+    padding: 8px 16px;
+    margin: 2px;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--color-text, rgb(255, 255, 255));
+}
+
+.nav-bar__item--active {
+    background-color: var(--color-accent, rgb(255, 215, 0));
+    color: var(--color-background, rgb(26, 26, 30));
+}
+
+.nav-bar__item:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}

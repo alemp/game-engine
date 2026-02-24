@@ -1,10 +1,12 @@
 {
   "screens": [
-    {
-      "id": "hud",
-      "template": "Game/UI/GameHUD",
-      "visible": true
-    }
+    { "id": "hud", "template": "Game/UI/GameHUD", "visible": true, "labelKey": "nav.main" },
+    { "id": "upgrades", "template": "Game/UI/UpgradesScreen", "visible": true, "labelKey": "nav.upgrades" }
   ],
-  "defaultScreen": "hud"
+  "defaultScreen": "hud",
+  "navigation": {
+    "type": "bottom_bar",
+    "position": "bottom",
+    "items": ["hud", "upgrades"]
+  }
 }

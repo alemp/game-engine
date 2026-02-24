@@ -1,4 +1,6 @@
 {
   "resource.gold": "Ouro",
-  "upgrade.gold_multiplier_1": "2× Produção de Ouro"
+  "upgrade.gold_multiplier_1": "2× Produção de Ouro",
+  "nav.main": "Principal",
+  "nav.upgrades": "Melhorias"
 }
