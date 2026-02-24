@@ -24,7 +24,7 @@ namespace GameEngine.Core.Config.Schemas
         public double OutputAmount { get; set; }
 
         /// <summary>
-        /// Optional multiplier applied to output (e.g. 2.0 = 2x). Default 1.0.
+        /// Optional multiplier applied to output (e.g. 2.0 = 2x). Default 1.0 when omitted.
         /// </summary>
         [JsonProperty("multiplier")]
         public double Multiplier { get; set; } = 1.0;
