@@ -1,0 +1,8 @@
+{
+  "currencyResourceId": "souls",
+  "formula": "sqrt",
+  "formulaFactor": 0.01,
+  "sourceResourceIds": ["gold"],
+  "boostPerUnit": 0.01,
+  "minResourceValue": 100
+}

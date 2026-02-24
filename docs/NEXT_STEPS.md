@@ -66,9 +66,9 @@ Checkboxes track implementation progress. Update this file when completing each 
 ### Idle Extensions
 
 - [x] UpgradeModule (linear, multiplicative, conditional)
-- [ ] PrestigeModule (partial reset, special currency, boost)
-- [ ] QuestModule
-- [ ] EventModule (temporary events)
+- [x] PrestigeModule (partial reset, special currency, boost)
+- [x] QuestModule
+- [x] EventModule (temporary events)
 
 ### Monetization
 
@@ -84,6 +84,41 @@ Checkboxes track implementation progress. Update this file when completing each 
 
 - [x] Simulator CLI (run progression, output report)
 - [x] Editor menu: Tools → Engine → Simulate
+
+---
+
+## UI Redesign (Implementation Strategy)
+
+*Reference: MASTER_SPEC §15.1. Style: Cookie Clicker–like but distinct theme. All configurable per game.*
+
+### Phase A – Foundation
+
+- [ ] Extend theme.json (shadows, card styles, animation durations)
+- [ ] Card-based layout for resources and upgrades
+- [ ] Section headers (Resources, Upgrades, Actions)
+- [ ] hud.json: section order, layout options
+
+### Phase B – Icons & Production
+
+- [ ] resources.json: add `iconPath` per resource
+- [ ] upgrades.json: add `iconPath` per upgrade
+- [ ] ResourceDisplay: support icon, production rate (+X/sec)
+- [ ] BigNumber formatting (K, M, B, etc.) for display
+- [ ] Per-game icon folder: `_Games/<id>/Art/icons/`
+
+### Phase C – Module UI
+
+- [ ] Prestige: button + prestige currency display in HUD
+- [ ] Quests: panel with list, progress bars, claim button
+- [ ] Events: active event banner + countdown timer
+- [ ] hud.json / ui.json: configurable section visibility per module
+
+### Phase D – Polish
+
+- [ ] Purchase feedback (toast or short animation)
+- [ ] Micro-animations (resource gain, button press)
+- [ ] Safe-area handling for mobile
+- [ ] theme.json: animation speed tokens
 
 ---
 
@@ -115,7 +150,7 @@ From MASTER_SPEC §6:
 
 - [x] Offline progress (apply ticks for elapsed time on app resume)
 - [x] Upgrades (linear, multiplicative, conditional, progressive unlocks)
-- [ ] Prestige (partial reset, special currency, permanent boost, configurable formula)
+- [x] Prestige (partial reset, special currency, permanent boost, configurable formula)
 - [x] Localization loading (JSON → runtime strings, fallback to English)
 - [x] Multipliers in production
 - [x] Configurable exponential curves
@@ -124,7 +159,7 @@ From MASTER_SPEC §6:
 
 ## Infrastructure
 
-- [x] SaveSystem (persist resources, upgrades, prestige state)
+- [x] SaveSystem (persist resources, upgrades, prestige, quests)
 - [ ] Diagnostics / logging
 - [ ] Assembly definitions for Services (Ads, IAP, Analytics, RemoteConfig, Consent)
 - [ ] Audio/SFX service structure

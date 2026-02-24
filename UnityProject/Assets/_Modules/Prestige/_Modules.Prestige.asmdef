@@ -1,0 +1,14 @@
+{
+    "name": "GameEngine.Modules.Prestige",
+    "rootNamespace": "GameEngine.Modules.Prestige",
+    "references": ["GameEngine.Core", "GameEngine.Modules.Idle", "GameEngine.Modules.Upgrades"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

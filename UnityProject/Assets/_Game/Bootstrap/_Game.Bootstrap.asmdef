@@ -3,7 +3,11 @@
     "rootNamespace": "GameEngine.Game.Bootstrap",
     "references": [
         "GameEngine.Core",
-        "GameEngine.Modules.Idle","GameEngine.Modules.Upgrades",
+        "GameEngine.Modules.Idle",
+        "GameEngine.Modules.Upgrades",
+        "GameEngine.Modules.Prestige",
+        "GameEngine.Modules.Quests",
+        "GameEngine.Modules.Events",
         "UnityEngine.CoreModule"
     ],
     "includePlatforms": [],

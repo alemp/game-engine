@@ -17,6 +17,8 @@ namespace GameEngine.Modules.Idle
         private readonly Dictionary<string, BigNumber> _resources = new();
         private readonly List<ProductionRule> _productionRules = new();
         private readonly Dictionary<string, double> _productionMultipliers = new();
+        private readonly Dictionary<string, double> _eventMultipliers = new();
+        private double _prestigeMultiplier = 1.0;
 
         public IReadOnlyDictionary<string, BigNumber> Resources => _resources;
 
@@ -88,11 +90,39 @@ namespace GameEngine.Modules.Idle
         }
 
         /// <summary>
-        /// Gets the current upgrade multiplier for a production (1.0 if none).
+        /// Gets the current multiplier for a production (upgrade * prestige * event).
         /// </summary>
         public double GetProductionMultiplier(string productionId)
         {
-            return _productionMultipliers.TryGetValue(productionId, out var m) ? m : 1.0;
+            var upgrade = _productionMultipliers.TryGetValue(productionId, out var m) ? m : 1.0;
+            var eventMult = _eventMultipliers.TryGetValue(productionId, out var em) ? em : 1.0;
+            return upgrade * _prestigeMultiplier * eventMult;
+        }
+
+        /// <summary>
+        /// Sets the event multiplier for a production. Used by EventModule.
+        /// </summary>
+        public void SetEventMultiplier(string productionId, double multiplier)
+        {
+            if (string.IsNullOrEmpty(productionId))
+                return;
+            _eventMultipliers[productionId] = multiplier > 0 ? multiplier : 1.0;
+        }
+
+        /// <summary>
+        /// Clears all event multipliers. Called when an event ends.
+        /// </summary>
+        public void ClearEventMultipliers()
+        {
+            _eventMultipliers.Clear();
+        }
+
+        /// <summary>
+        /// Sets the prestige multiplier (applies to all productions). Used by PrestigeModule.
+        /// </summary>
+        public void SetPrestigeMultiplier(double multiplier)
+        {
+            _prestigeMultiplier = multiplier > 0 ? multiplier : 1.0;
         }
 
         /// <summary>

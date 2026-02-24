@@ -12,6 +12,9 @@ using GameEngine.Core.SaveSystem;
 using GameEngine.Core.Scheduler;
 using GameEngine.Modules.Idle;
 using GameEngine.Modules.Upgrades;
+using GameEngine.Modules.Prestige;
+using GameEngine.Modules.Quests;
+using GameEngine.Modules.Events;
 using UnityEngine;
 
 namespace GameEngine.Game.Bootstrap
@@ -37,10 +40,27 @@ namespace GameEngine.Game.Bootstrap
         private LocalizationService _localization;
         private IReadOnlyDictionary<string, string> _resourceDisplayKeys;
         private UpgradeModule _upgradeModule;
+        private PrestigeModule _prestigeModule;
+        private QuestModule _questModule;
+        private EventModule _eventModule;
 
         public IdleModule IdleModule => _idleModule;
         public UpgradeModule UpgradeModule => _upgradeModule;
+        public PrestigeModule PrestigeModule => _prestigeModule;
+        public QuestModule QuestModule => _questModule;
+        public EventModule EventModule => _eventModule;
         public ThemeSchema Theme => _theme;
+
+        /// <summary>
+        /// Attempts to prestige. Resets scheduler and applies boost on success.
+        /// </summary>
+        public bool TryPrestige()
+        {
+            if (_prestigeModule == null)
+                return false;
+            return _prestigeModule.TryPrestige(() => _scheduler?.Reset());
+        }
+
         public HudSchema HudConfig => _hudConfig;
         public UiSchema UiConfig => _uiConfig;
         public LocalizationService Localization => _localization;
@@ -94,6 +114,24 @@ namespace GameEngine.Game.Bootstrap
                 var upgrades = _gameLoader.LoadUpgrades();
                 if (upgrades?.Upgrades != null)
                     _upgradeModule.RegisterUpgrades(upgrades.Upgrades);
+
+                _prestigeModule = new PrestigeModule(_idleModule, _upgradeModule);
+                var prestigeConfig = _gameLoader.LoadPrestige();
+                if (prestigeConfig != null)
+                {
+                    _prestigeModule.Configure(prestigeConfig);
+                    _idleModule.RegisterResourceIfNew(prestigeConfig.CurrencyResourceId, BigNumber.Zero);
+                }
+
+                _questModule = new QuestModule(_idleModule, _upgradeModule, _prestigeModule);
+                var quests = _gameLoader.LoadQuests();
+                if (quests?.Quests != null)
+                    _questModule.RegisterQuests(quests.Quests);
+
+                _eventModule = new EventModule(_idleModule);
+                var events = _gameLoader.LoadEvents();
+                if (events?.Events != null)
+                    _eventModule.RegisterEvents(events.Events);
             }
             catch (Exception ex)
             {
@@ -116,6 +154,7 @@ namespace GameEngine.Game.Bootstrap
         private void Update()
         {
             _scheduler?.Tick(Time.deltaTime);
+            _eventModule?.Tick(Time.deltaTime);
         }
 
         private void OnDestroy()
@@ -150,6 +189,18 @@ namespace GameEngine.Game.Bootstrap
 
             if (_upgradeModule != null && saveData.Upgrades != null)
                 _upgradeModule.ApplyPurchasedLevels(saveData.Upgrades);
+
+            if (_prestigeModule != null && saveData.Prestige != null)
+            {
+                var prestigeAmount = SaveSystem.FromSaveData(saveData.Prestige);
+                _prestigeModule.SetPrestigeCurrency(prestigeAmount);
+                var currencyId = _prestigeModule.GetCurrencyResourceId();
+                if (_idleModule.Resources.ContainsKey(currencyId))
+                    _idleModule.ApplyResources(new Dictionary<string, BigNumber> { { currencyId, prestigeAmount } });
+            }
+
+            if (_questModule != null && saveData.CompletedQuests != null)
+                _questModule.SetCompletedQuests(saveData.CompletedQuests);
         }
 
         private void ApplyOfflineProgress(SaveDataSchema saveData)
@@ -184,6 +235,8 @@ namespace GameEngine.Game.Bootstrap
                 resources[id] = SaveSystem.ToSaveData(amount);
 
             var upgrades = _upgradeModule != null ? _upgradeModule.GetPurchasedLevels() : null;
+            var prestige = _prestigeModule != null ? SaveSystem.ToSaveData(_prestigeModule.GetPrestigeCurrency()) : null;
+            var completedQuests = _questModule != null ? new List<string>(_questModule.GetCompletedQuestIds()) : null;
 
             var saveData = new SaveDataSchema
             {
@@ -196,7 +249,9 @@ namespace GameEngine.Game.Bootstrap
                     AccumulatedTime = _scheduler.AccumulatedTime
                 },
                 Resources = resources,
-                Upgrades = upgrades != null ? new Dictionary<string, int>(upgrades) : null
+                Upgrades = upgrades != null ? new Dictionary<string, int>(upgrades) : null,
+                Prestige = prestige,
+                CompletedQuests = completedQuests
             };
 
             try
@@ -269,6 +324,21 @@ namespace GameEngine.Game.Bootstrap
                     _upgradeModule.RegisterUpgrades(upgrades.Upgrades);
                     _upgradeModule.ApplyEffects();
                 }
+
+                var prestigeConfig = _gameLoader.LoadPrestige();
+                if (_prestigeModule != null && prestigeConfig != null)
+                {
+                    _prestigeModule.Configure(prestigeConfig);
+                    _idleModule.RegisterResourceIfNew(prestigeConfig.CurrencyResourceId, BigNumber.Zero);
+                }
+
+                var quests = _gameLoader.LoadQuests();
+                if (_questModule != null && quests?.Quests != null)
+                    _questModule.RegisterQuests(quests.Quests);
+
+                var events = _gameLoader.LoadEvents();
+                if (_eventModule != null && events?.Events != null)
+                    _eventModule.RegisterEvents(events.Events);
 
                 ConfigReloaded?.Invoke();
                 Debug.Log("[Config Hot Reload] Config reloaded successfully.");

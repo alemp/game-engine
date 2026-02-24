@@ -1,0 +1,14 @@
+{
+    "name": "GameEngine.Modules.Events",
+    "rootNamespace": "GameEngine.Modules.Events",
+    "references": ["GameEngine.Core", "GameEngine.Modules.Idle"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

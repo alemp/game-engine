@@ -1,0 +1,12 @@
+{
+  "events": [
+    {
+      "id": "gold_rush",
+      "displayKey": "event.gold_rush",
+      "durationSeconds": 60,
+      "productionMultipliers": {
+        "gold_generator": 2
+      }
+    }
+  ]
+}

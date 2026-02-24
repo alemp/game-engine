@@ -25,6 +25,12 @@ namespace GameEngine.Core.SaveSystem
 
         [JsonProperty("upgrades")]
         public Dictionary<string, int> Upgrades { get; set; }
+
+        [JsonProperty("prestige")]
+        public BigNumberSaveData Prestige { get; set; }
+
+        [JsonProperty("completedQuests")]
+        public List<string> CompletedQuests { get; set; }
     }
 
     public sealed class SchedulerSaveData

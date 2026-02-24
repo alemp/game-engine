@@ -145,5 +145,44 @@ namespace GameEngine.Core.Config
             var json = File.ReadAllText(path);
             return JsonConvert.DeserializeObject<UpgradesSchema>(json);
         }
+
+        /// <summary>
+        /// Loads prestige config from Content/prestige.json. Returns null if file does not exist.
+        /// </summary>
+        public PrestigeSchema LoadPrestige()
+        {
+            var path = Path.Combine(_basePath, "Content", "prestige.json");
+            if (!File.Exists(path))
+                return null;
+
+            var json = File.ReadAllText(path);
+            return JsonConvert.DeserializeObject<PrestigeSchema>(json);
+        }
+
+        /// <summary>
+        /// Loads quests from Content/quests.json. Returns null if file does not exist.
+        /// </summary>
+        public QuestsSchema LoadQuests()
+        {
+            var path = Path.Combine(_basePath, "Content", "quests.json");
+            if (!File.Exists(path))
+                return null;
+
+            var json = File.ReadAllText(path);
+            return JsonConvert.DeserializeObject<QuestsSchema>(json);
+        }
+
+        /// <summary>
+        /// Loads events from Content/events.json. Returns null if file does not exist.
+        /// </summary>
+        public EventsSchema LoadEvents()
+        {
+            var path = Path.Combine(_basePath, "Content", "events.json");
+            if (!File.Exists(path))
+                return null;
+
+            var json = File.ReadAllText(path);
+            return JsonConvert.DeserializeObject<EventsSchema>(json);
+        }
     }
 }

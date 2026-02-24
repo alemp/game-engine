@@ -1,0 +1,14 @@
+{
+    "name": "GameEngine.Modules.Quests",
+    "rootNamespace": "GameEngine.Modules.Quests",
+    "references": ["GameEngine.Core", "GameEngine.Modules.Idle", "GameEngine.Modules.Upgrades", "GameEngine.Modules.Prestige"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -309,6 +309,48 @@ Minimum criteria to scale a game:
 
 ---
 
+### 15.1 UI Redesign Implementation Strategy
+
+**Goal**: Substantial UI overhaul delivered incrementally. All improvements must be **configurable per game** so future games can define their own visual identity without code changes.
+
+**Reference style**: Cookie Clicker–like (playful, satisfying, readable) but with a **distinct theme**—not a copy. Each game defines its own look via `theme.json`, `ui.json`, and per-game assets.
+
+**Principles**:
+* **Config > Code**: Layout, density, icon paths, and component visibility driven by JSON
+* **Per-game assets**: Icons, fonts, and visual tokens live in `_Games/<game_id>/Art/`
+* **Incremental delivery**: Each phase ships a working build; no big-bang redesign
+
+**Configuration extensions** (to support redesign):
+
+| Config | Extension |
+|--------|-----------|
+| `theme.json` | Shadows, card styles, animation durations, icon sizes |
+| `hud.json` | Sections (resources, upgrades, actions), production rate visibility, icon paths |
+| `resources.json` | `iconPath` per resource |
+| `upgrades.json` | `iconPath` per upgrade |
+| `ui.json` | Screen structure, section order, navigation density |
+
+**Implementation phases** (incremental):
+
+| Phase | Scope | Configurable |
+|-------|-------|--------------|
+| **A. Foundation** | Extend theme tokens (shadows, cards, radii). Card-based layout for resources/upgrades. Section headers. | theme.json, hud.json |
+| **B. Icons & production** | Resource/upgrade icons from config. Production rate display (e.g. +X/sec). Number formatting (K, M, B). | resources.json, upgrades.json, hud.json |
+| **C. Module UI** | Prestige button + currency. Quest panel (list, progress, claim). Event banner + timer. | hud.json, ui.json (new sections) |
+| **D. Polish** | Purchase feedback (toast/animation). Micro-animations. Safe-area handling. | theme.json (animation speed) |
+
+**Asset structure** (per game):
+
+```
+_Games/<game_id>/Art/
+  icons/
+    resources/     # gold.png, souls.png, etc.
+    upgrades/      # gold_multiplier_1.png, etc.
+  fonts/           # optional custom font
+```
+
+---
+
 ## 16. Guiding Principles
 
 * Config > Code
