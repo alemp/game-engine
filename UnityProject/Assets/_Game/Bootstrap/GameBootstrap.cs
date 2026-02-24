@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using GameEngine.Core.Config;
 using GameEngine.Core.Config.Schemas;
+using GameEngine.Core.Localization;
 using GameEngine.Core.Config.Validation;
 using GameEngine.Core.Economy;
 using GameEngine.Core.EventBus;
@@ -30,9 +31,13 @@ namespace GameEngine.Game.Bootstrap
         private SaveSystem _saveSystem;
         private GameConfigSchema _gameConfig;
         private ThemeSchema _theme;
+        private LocalizationService _localization;
+        private IReadOnlyDictionary<string, string> _resourceDisplayKeys;
 
         public IdleModule IdleModule => _idleModule;
         public ThemeSchema Theme => _theme;
+        public LocalizationService Localization => _localization;
+        public IReadOnlyDictionary<string, string> ResourceDisplayKeys => _resourceDisplayKeys;
 
         private void Awake()
         {
@@ -44,6 +49,9 @@ namespace GameEngine.Game.Bootstrap
             var gameConfig = _gameLoader.LoadGameConfig();
             _gameConfig = gameConfig;
             _theme = _gameLoader.LoadTheme();
+            _localization = new LocalizationService();
+            _localization.Load(configPath, GetSystemLocale());
+            _resourceDisplayKeys = _gameLoader.GetResourceDisplayKeys();
             var validator = new ConfigValidator();
             var validation = validator.Validate(gameConfig);
             if (!validation.IsValid)
@@ -176,6 +184,24 @@ namespace GameEngine.Game.Bootstrap
             }
         }
 
+        private static string GetSystemLocale()
+        {
+            return Application.systemLanguage switch
+            {
+                SystemLanguage.Portuguese => "pt",
+                SystemLanguage.Spanish => "es",
+                SystemLanguage.French => "fr",
+                SystemLanguage.German => "de",
+                SystemLanguage.Japanese => "ja",
+                SystemLanguage.Korean => "ko",
+                SystemLanguage.Chinese => "zh",
+                SystemLanguage.ChineseSimplified => "zh-CN",
+                SystemLanguage.ChineseTraditional => "zh-TW",
+                SystemLanguage.Russian => "ru",
+                _ => "en"
+            };
+        }
+
         private static string ResolveGameConfigPath(string gameId)
         {
 #if UNITY_EDITOR
@@ -196,6 +222,11 @@ namespace GameEngine.Game.Bootstrap
 
         private void FallbackToHardcodedSetup()
         {
+            var configPath = ResolveGameConfigPath(_gameId);
+            _localization ??= new LocalizationService();
+            _localization.Load(configPath, GetSystemLocale());
+            _resourceDisplayKeys ??= new Dictionary<string, string> { ["gold"] = "resource.gold" };
+
             _scheduler ??= new Scheduler(1.0);
             _idleModule ??= new IdleModule(_eventBus, _scheduler);
             _idleModule.RegisterResource("gold", BigNumber.One);

@@ -115,7 +115,7 @@ From MASTER_SPEC §6:
 - [x] Offline progress (apply ticks for elapsed time on app resume)
 - [ ] Upgrades (linear, multiplicative, conditional, progressive unlocks)
 - [ ] Prestige (partial reset, special currency, permanent boost, configurable formula)
-- [ ] Localization loading (JSON → runtime strings, fallback to English)
+- [x] Localization loading (JSON → runtime strings, fallback to English)
 - [x] Multipliers in production
 - [ ] Configurable exponential curves
 

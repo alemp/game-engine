@@ -72,6 +72,21 @@ namespace GameEngine.Core.Config
         }
 
         /// <summary>
+        /// Returns resource id → display key for localization.
+        /// </summary>
+        public IReadOnlyDictionary<string, string> GetResourceDisplayKeys()
+        {
+            var schema = LoadResources();
+            var dict = new Dictionary<string, string>();
+            foreach (var res in schema.Resources ?? new List<ResourceEntry>())
+            {
+                if (!string.IsNullOrEmpty(res.Id) && !string.IsNullOrEmpty(res.DisplayKey))
+                    dict[res.Id] = res.DisplayKey;
+            }
+            return dict;
+        }
+
+        /// <summary>
         /// Returns production rules for the bootstrap to add.
         /// </summary>
         public IReadOnlyList<(IReadOnlyList<(string ResourceId, BigNumber Amount)> Inputs, string OutputId, BigNumber OutputAmount, double Multiplier)> GetProductionRules()
