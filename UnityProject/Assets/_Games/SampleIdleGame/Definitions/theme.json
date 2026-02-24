@@ -1,0 +1,24 @@
+{
+  "colors": {
+    "primary": "#3399ff",
+    "secondary": "#66cc66",
+    "background": "#1a1a1e",
+    "text": "#ffffff",
+    "accent": "#ffd700"
+  },
+  "radii": {
+    "button": 8,
+    "card": 12
+  },
+  "spacing": {
+    "xs": 4,
+    "sm": 8,
+    "md": 16,
+    "lg": 24
+  },
+  "typography": {
+    "h1": 32,
+    "body": 16,
+    "numbers": 18
+  }
+}

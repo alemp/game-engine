@@ -9,6 +9,7 @@ Modular mobile game engine focused on **Idle Games**, built with Unity. One engi
 | Document | Purpose |
 |----------|---------|
 | [**MASTER_SPEC.md**](MASTER_SPEC.md) | Full specification, architecture, and implementation decisions |
+| [**/docs/NEXT_STEPS.md**](docs/NEXT_STEPS.md) | Implementation tracker with checkboxes |
 | [**/docs/**](docs/) | Architecture notes, API docs, and other project documentation |
 
 ---

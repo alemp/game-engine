@@ -45,6 +45,19 @@ namespace GameEngine.Core.Config
         }
 
         /// <summary>
+        /// Loads theme from Definitions/theme.json. Returns null if file does not exist.
+        /// </summary>
+        public ThemeSchema LoadTheme()
+        {
+            var path = Path.Combine(_basePath, "Definitions", "theme.json");
+            if (!File.Exists(path))
+                return null;
+
+            var json = File.ReadAllText(path);
+            return JsonConvert.DeserializeObject<ThemeSchema>(json);
+        }
+
+        /// <summary>
         /// Returns resource definitions for the bootstrap to register.
         /// </summary>
         public IReadOnlyList<(string Id, BigNumber InitialAmount)> GetResourceDefinitions()

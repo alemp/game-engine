@@ -1,5 +1,7 @@
+using GameEngine.Core.Config.Schemas;
 using GameEngine.Game.Bootstrap;
 using GameEngine.Modules.Idle;
+using GameEngine.UI.Theme;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -41,6 +43,9 @@ namespace GameEngine.Game.UI
             _root = _uiDocument.rootVisualElement;
             if (_root == null)
                 return;
+
+            if (_bootstrap.Theme != null)
+                ThemeApplier.Apply(_root, _bootstrap.Theme);
 
             _goldLabel = _root.Q<Label>("gold-value");
             if (_goldLabel == null)

@@ -13,6 +13,7 @@ namespace GameEngine.Core.Scheduler
         private int _tickCount;
 
         public int TickCount => _tickCount;
+        public double AccumulatedTime => _accumulatedTime;
         public double TickIntervalSeconds => _tickIntervalSeconds;
 
         public event Action<int> OnTick;
@@ -53,6 +54,15 @@ namespace GameEngine.Core.Scheduler
         {
             _accumulatedTime = 0;
             _tickCount = 0;
+        }
+
+        /// <summary>
+        /// Restores scheduler state from save (tick count and accumulated time).
+        /// </summary>
+        public void SetState(int tickCount, double accumulatedTime)
+        {
+            _tickCount = Math.Max(0, tickCount);
+            _accumulatedTime = Math.Max(0, Math.Min(accumulatedTime, _tickIntervalSeconds));
         }
     }
 }

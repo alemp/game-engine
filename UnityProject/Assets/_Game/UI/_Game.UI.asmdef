@@ -3,7 +3,7 @@
     "rootNamespace": "GameEngine.Game.UI",
     "references": [
         "GameEngine.Core",
-        "GameEngine.Game.Bootstrap",
+        "GameEngine.Engine.UI","GameEngine.Game.Bootstrap",
         "GameEngine.Modules.Idle",
         "UnityEngine.CoreModule",
         "Unity.UI"

@@ -59,6 +59,49 @@ namespace GameEngine.Modules.Idle
             return true;
         }
 
+        /// <summary>
+        /// Runs production for the given number of ticks (e.g. for offline progress).
+        /// </summary>
+        public void SimulateTicks(int count)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                foreach (var rule in _productionRules)
+                {
+                    if (rule.Inputs.Count > 0 && !CanAfford(rule.Inputs))
+                        continue;
+
+                    foreach (var (resId, amount) in rule.Inputs)
+                        TrySpend(resId, amount);
+
+                    AddResource(rule.OutputId, rule.OutputAmount);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Applies saved resources. Only updates resources already registered (ignores removed/unknown).
+        /// </summary>
+        public void ApplyResources(IReadOnlyDictionary<string, BigNumber> snapshot)
+        {
+            if (snapshot == null)
+                return;
+            foreach (var (id, amount) in snapshot)
+            {
+                if (_resources.ContainsKey(id))
+                    _resources[id] = amount;
+            }
+        }
+
+        /// <summary>
+        /// Returns a copy of current resources for save.
+        /// </summary>
+        public IReadOnlyDictionary<string, BigNumber> GetResourceSnapshot()
+        {
+            var copy = new Dictionary<string, BigNumber>(_resources);
+            return copy;
+        }
+
         private void OnTick(int tick)
         {
             foreach (var rule in _productionRules)

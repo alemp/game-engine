@@ -41,14 +41,14 @@
 - **ConfigLoader** – Load JSON config from disk
 - **GameLoader** – Deserialize game.json, resources.json, production.json
 - **ConfigValidator** – Validation for game config
+- **SaveSystem** – Persist resources and scheduler state to JSON
+- **Offline progress** – Apply capped ticks on app resume (maxOfflineSeconds per game)
 - **IdleModule** – Production chains (multiple inputs → one output, or generators with no input)
 - **ThemeTokens** – ScriptableObject for design tokens
+- **Theme loading** – theme.json from Definitions/, applied to UI at runtime via USS variables
 - **GameHUD** – UI Toolkit HUD displaying resource values
 - **SampleIdleGame** – Full JSON config and content
 
 ## Next Steps
 
-- Implement Save/Load system
-- Add offline progress calculation
-- Add UpgradeModule
-- Add localization loading from JSON
+See [docs/NEXT_STEPS.md](NEXT_STEPS.md) for the full implementation tracker with checkboxes.
