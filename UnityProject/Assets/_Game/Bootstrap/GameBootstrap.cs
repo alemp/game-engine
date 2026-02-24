@@ -61,6 +61,35 @@ namespace GameEngine.Game.Bootstrap
             return _prestigeModule.TryPrestige(() => _scheduler?.Reset());
         }
 
+        /// <summary>
+        /// Resets resources, upgrades, prestige, quests, and scheduler to initial state.
+        /// Editor-only shortcut for testing.
+        /// </summary>
+        public void ResetProgress()
+        {
+            if (_idleModule == null)
+                return;
+
+            var initial = new Dictionary<string, BigNumber>();
+            foreach (var (id, amount) in _gameLoader.GetResourceDefinitions())
+                initial[id] = amount;
+            _idleModule.ApplyResources(initial);
+
+            _upgradeModule?.ApplyPurchasedLevels(new Dictionary<string, int>());
+
+            if (_prestigeModule != null)
+            {
+                _prestigeModule.SetPrestigeCurrency(BigNumber.Zero);
+                var currencyId = _prestigeModule.GetCurrencyResourceId();
+                if (_idleModule.Resources.ContainsKey(currencyId))
+                    _idleModule.ApplyResources(new Dictionary<string, BigNumber> { { currencyId, BigNumber.Zero } });
+            }
+
+            _questModule?.SetCompletedQuests(null);
+            _eventModule?.EndEvent();
+            _scheduler?.Reset();
+        }
+
         public HudSchema HudConfig => _hudConfig;
         public UiSchema UiConfig => _uiConfig;
         public LocalizationService Localization => _localization;

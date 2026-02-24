@@ -2,7 +2,7 @@
     <Style src="../../../_Engine/UI/Components/ResourceDisplay.uss" />
     <Style src="../../../_Engine/UI/Components/UpgradeButton.uss" />
     <Style src="../../../_Engine/UI/Components/HudSections.uss" />
-    <ui:VisualElement name="hud-root" style="flex-grow: 1; padding: 16px; flex-direction: column;">
+    <ui:VisualElement name="hud-root" style="flex-grow: 1; width: 100%; padding: 20px; flex-direction: column;">
         <ui:VisualElement name="section-resources" class="hud-section">
             <ui:Label name="section-resources-header" class="hud-section__header" text="Resources" />
             <ui:VisualElement name="resource-container" class="hud-section__content hud-section__content--card">

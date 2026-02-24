@@ -14,6 +14,6 @@
 
 .resource-display__value {
     font-size: var(--font-numbers, 18px);
-    font-weight: bold;
+    -unity-font-style: bold;
     color: var(--color-accent, rgb(255, 215, 0));
 }

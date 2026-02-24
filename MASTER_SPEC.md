@@ -598,6 +598,7 @@ Resolved technical decisions for implementation:
 | **Validator / Simulator** | Standalone CLI tools |
 | **Phase 1 approach** | Start small, grow every iteration |
 | **SampleIdleGame** | Complete reference game |
+| **Resolution** | Mobile-first: Constant Physical Size (Reference DPI 160). UI scales by device DPI for consistent size on all phones (e.g. Pixel 9 Pro XL 1344×2992). See `docs/SETUP_UNITY.md` §4. |
 
 ---
 

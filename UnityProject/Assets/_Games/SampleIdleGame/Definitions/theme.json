@@ -18,8 +18,8 @@
   },
   "typography": {
     "h1": 32,
-    "body": 16,
-    "numbers": 18
+    "body": 17,
+    "numbers": 20
   },
   "shadows": {
     "color": "#00000040",

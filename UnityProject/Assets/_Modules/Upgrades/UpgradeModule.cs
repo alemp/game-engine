@@ -116,16 +116,31 @@ namespace GameEngine.Modules.Upgrades
 
             foreach (var (productionId, modifier) in modifiers)
                 _idleModule.SetProductionMultiplier(productionId, modifier);
+
+            foreach (var upgrade in _upgradesById.Values)
+            {
+                if (!string.IsNullOrEmpty(upgrade.TargetProductionId) && !modifiers.ContainsKey(upgrade.TargetProductionId))
+                    _idleModule.SetProductionMultiplier(upgrade.TargetProductionId, 1.0);
+            }
         }
 
         public void ApplyPurchasedLevels(IReadOnlyDictionary<string, int> levels)
         {
             if (levels == null)
                 return;
-            foreach (var (id, level) in levels)
+            if (levels.Count == 0)
             {
-                if (level > 0 && _upgradesById.ContainsKey(id))
-                    _purchasedLevels[id] = level;
+                _purchasedLevels.Clear();
+            }
+            else
+            {
+                foreach (var (id, level) in levels)
+                {
+                    if (level > 0 && _upgradesById.ContainsKey(id))
+                        _purchasedLevels[id] = level;
+                    else if (level <= 0 && _purchasedLevels.ContainsKey(id))
+                        _purchasedLevels.Remove(id);
+                }
             }
             ApplyEffects();
         }

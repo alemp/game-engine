@@ -19,7 +19,6 @@ namespace GameEngine.UI.Theme
         /// </summary>
         private const string HudSectionHeaderClass = "hud-section__header";
         private const string HudCardClass = "hud-card";
-        private const string ResourceDisplayCardClass = "resource-display--card";
         private const string UpgradeButtonCardClass = "upgrade-button--card";
 
         public static void Apply(VisualElement root, ThemeSchema theme)
@@ -79,7 +78,6 @@ namespace GameEngine.UI.Theme
                 }
 
                 root.Query().Class(HudCardClass).ForEach(ApplyCard);
-                root.Query().Class(ResourceDisplayCardClass).ForEach(ApplyCard);
                 root.Query().Class(UpgradeButtonCardClass).ForEach(ApplyCard);
             }
         }

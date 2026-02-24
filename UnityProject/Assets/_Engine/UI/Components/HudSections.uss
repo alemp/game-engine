@@ -1,13 +1,15 @@
-/* HUD section headers and card layout - Phase A */
+/* HUD section headers and card layout - Phase A (mobile-optimized) */
 
 .hud-section {
     flex-direction: column;
-    margin-bottom: var(--spacing-md, 16px);
+    flex-grow: 0;
+    width: 100%;
+    margin-bottom: var(--spacing-lg, 24px);
 }
 
 .hud-section__header {
-    font-size: var(--font-body, 16px);
-    font-weight: bold;
+    font-size: 18px;
+    -unity-font-style: bold;
     color: var(--color-text, rgb(255, 255, 255));
     margin-bottom: var(--spacing-sm, 8px);
     padding-bottom: var(--spacing-xs, 4px);
@@ -17,12 +19,14 @@
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
+    width: 100%;
 }
 
 .hud-section__content--card {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: stretch;
+    width: 100%;
 }
 
 .hud-card {
@@ -35,22 +39,36 @@
     margin-bottom: var(--spacing-sm, 8px);
 }
 
-.resource-display--card {
-    background-color: var(--color-card-bg, rgb(37, 37, 48));
-    border-radius: var(--radius-card, 12px);
-    border-width: 1px;
-    border-color: var(--color-card-border, rgb(58, 58, 69));
-    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+/* Resources: badges (mobile touch-friendly) */
+.resource-display--badge {
+    flex-direction: row;
+    align-items: center;
+    min-height: 44px;
+    background-color: rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-button, 8px);
+    padding: 10px 14px;
     margin-right: var(--spacing-sm, 8px);
     margin-bottom: var(--spacing-sm, 8px);
 }
 
+.resource-display--badge .resource-display__label {
+    margin-right: var(--spacing-sm, 8px);
+    margin-bottom: 0;
+    font-size: 16px;
+    color: var(--color-text-secondary, rgb(180, 180, 180));
+}
+
+.resource-display--badge .resource-display__value {
+    font-size: 20px;
+}
+
 .upgrade-button--card {
+    min-height: 48px;
     background-color: var(--color-card-bg, rgb(37, 37, 48));
     border-radius: var(--radius-card, 12px);
     border-width: 1px;
     border-color: var(--color-card-border, rgb(58, 58, 69));
-    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+    padding: 12px 18px;
     margin-right: var(--spacing-sm, 8px);
     margin-bottom: var(--spacing-sm, 8px);
 }

@@ -229,7 +229,7 @@ namespace GameEngine.Game.UI
                 };
 
                 if (_bootstrap.HudConfig?.CardLayout ?? true)
-                    display.AddToClassList("resource-display--card");
+                    display.AddToClassList("resource-display--badge");
 
                 if (_bootstrap.Localization != null)
                 {

@@ -56,7 +56,27 @@ Step-by-step instructions to get the game engine running in Unity.
 
 ---
 
-## 4. Verify
+## 4. Mobile Resolution (iOS / Android)
+
+The project is **mobile-first**. UI scales correctly on high-resolution devices (e.g. Pixel 9 Pro XL 1344×2992):
+
+| Setting | Value | Purpose |
+|---------|-------|---------|
+| **Scale Mode** | Constant Physical Size | Maintains consistent physical size across DPI; scales up on high-DPI devices |
+| **Reference DPI** | 160 | Android mdpi baseline; UI scales by actualDPI/160 (e.g. ~3× on 480 DPI) |
+| **Fallback DPI** | 160 | Used when device DPI cannot be detected |
+| **Reference Resolution** | 390×844 | Design resolution (used with other scale modes) |
+| **Default (Editor)** | 390×844 | Simulates mobile in Play mode |
+| **Android** | 390×844 | Default window size |
+
+- **DefaultPanelSettings.asset**: Scale mode and DPI for UI Toolkit
+- **ProjectSettings**: Default screen size for Editor and Android
+
+To test mobile layout in the Editor: set the Game view to **Free Aspect** or **iPhone 14 (390×844)**.
+
+---
+
+## 5. Verify
 
 - Press **Play**
 - A HUD should show "Gold" with a number increasing every second
