@@ -27,6 +27,19 @@ namespace GameEngine.Game.UI
         private void OnEnable()
         {
             TryBind();
+            if (_bootstrap != null)
+                _bootstrap.ConfigReloaded += OnConfigReloaded;
+        }
+
+        private void OnDisable()
+        {
+            if (_bootstrap != null)
+                _bootstrap.ConfigReloaded -= OnConfigReloaded;
+        }
+
+        private void OnConfigReloaded()
+        {
+            TryBind();
         }
 
         private void TryBind()

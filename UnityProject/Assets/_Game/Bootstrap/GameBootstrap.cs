@@ -42,6 +42,11 @@ namespace GameEngine.Game.Bootstrap
         public LocalizationService Localization => _localization;
         public IReadOnlyDictionary<string, string> ResourceDisplayKeys => _resourceDisplayKeys;
 
+        /// <summary>
+        /// Fired when config is hot-reloaded (Editor only). UI should refresh.
+        /// </summary>
+        public event Action ConfigReloaded;
+
         private void Awake()
         {
             _eventBus = new EventBus();
@@ -214,6 +219,56 @@ namespace GameEngine.Game.Bootstrap
                 SystemLanguage.Russian => "ru",
                 _ => "en"
             };
+        }
+
+        /// <summary>
+        /// Reloads config from disk. Preserves runtime state (resources, upgrades, scheduler).
+        /// Editor only. Call when config files change.
+        /// </summary>
+        public void ReloadConfig()
+        {
+            if (_gameLoader == null || _idleModule == null)
+                return;
+
+            try
+            {
+                var gameConfig = _gameLoader.LoadGameConfig();
+                var validation = new ConfigValidator().Validate(gameConfig);
+                if (!validation.IsValid)
+                {
+                    foreach (var err in validation.Errors)
+                        Debug.LogWarning($"[Config Hot Reload] {err}");
+                    return;
+                }
+
+                _gameConfig = gameConfig;
+                _theme = _gameLoader.LoadTheme();
+                _localization.Load(ResolveGameConfigPath(_gameId), GetSystemLocale());
+                _resourceDisplayKeys = _gameLoader.GetResourceDisplayKeys();
+
+                foreach (var (id, amount) in _gameLoader.GetResourceDefinitions())
+                    _idleModule.RegisterResourceIfNew(id, amount);
+
+                _idleModule.ClearProductionRules();
+                foreach (var (id, inputs, outputId, outputAmount, multiplier) in _gameLoader.GetProductionRules())
+                {
+                    _idleModule.AddProductionRule(new ProductionRule(id, inputs, outputId, outputAmount, multiplier));
+                }
+
+                var upgrades = _gameLoader.LoadUpgrades();
+                if (_upgradeModule != null && upgrades?.Upgrades != null)
+                {
+                    _upgradeModule.RegisterUpgrades(upgrades.Upgrades);
+                    _upgradeModule.ApplyEffects();
+                }
+
+                ConfigReloaded?.Invoke();
+                Debug.Log("[Config Hot Reload] Config reloaded successfully.");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[Config Hot Reload] Failed: {ex.Message}");
+            }
         }
 
         private static string ResolveGameConfigPath(string gameId)

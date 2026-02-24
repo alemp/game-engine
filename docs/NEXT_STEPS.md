@@ -16,7 +16,7 @@ Checkboxes track implementation progress. Update this file when completing each 
 - [x] GameLoader (deserialize game.json, resources.json, production.json)
 - [x] SaveSystem (Save/Load)
 - [x] Offline progress calculation (max time cap per game)
-- [ ] Config hot reload (editor-only)
+- [x] Config hot reload (editor-only)
 
 ### Idle Module
 

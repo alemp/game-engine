@@ -39,6 +39,25 @@ namespace GameEngine.Modules.Idle
             _productionRules.Add(rule);
         }
 
+        /// <summary>
+        /// Clears all production rules. Used for config hot reload.
+        /// </summary>
+        public void ClearProductionRules()
+        {
+            _productionRules.Clear();
+        }
+
+        /// <summary>
+        /// Registers a resource only if it does not exist. Preserves existing amount for hot reload.
+        /// </summary>
+        public void RegisterResourceIfNew(string id, BigNumber initialAmount)
+        {
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentException("Resource id cannot be null or empty.", nameof(id));
+            if (!_resources.ContainsKey(id))
+                _resources[id] = initialAmount;
+        }
+
         public BigNumber GetResource(string id)
         {
             return _resources.TryGetValue(id, out var amount) ? amount : BigNumber.Zero;
