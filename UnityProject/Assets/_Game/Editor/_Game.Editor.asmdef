@@ -2,8 +2,10 @@
     "name": "GameEngine.Game.Editor",
     "rootNamespace": "GameEngine.Game.Editor",
     "references": [
+        "GameEngine.Core",
         "GameEngine.Game.Bootstrap",
         "GameEngine.Game.UI",
+        "GameEngine.Modules.Idle",
         "UnityEngine.CoreModule",
         "Unity.UI",
         "UnityEditor"

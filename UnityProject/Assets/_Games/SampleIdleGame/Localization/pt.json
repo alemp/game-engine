@@ -1,1 +1,4 @@
-{"resource.gold":"Ouro"}
+{
+  "resource.gold": "Ouro",
+  "upgrade.gold_multiplier_1": "2× Produção de Ouro"
+}

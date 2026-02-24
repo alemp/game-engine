@@ -61,6 +61,7 @@ Checkboxes track implementation progress. Update this file when completing each 
 - [ ] HUD layout configurable
 - [ ] Navigation (bottom bar, side HUD, tabs)
 - [x] ResourceDisplay bound to multiple resources dynamically
+- [x] Upgrade UI (purchase buttons bound to UpgradeModule.TryPurchase)
 
 ### Idle Extensions
 
@@ -81,8 +82,8 @@ Checkboxes track implementation progress. Update this file when completing each 
 
 ### Economy Simulator
 
-- [ ] Simulator CLI (run progression, output report)
-- [ ] Editor menu: Tools → Engine → Simulate
+- [x] Simulator CLI (run progression, output report)
+- [x] Editor menu: Tools → Engine → Simulate
 
 ---
 

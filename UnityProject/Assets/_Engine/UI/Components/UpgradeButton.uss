@@ -1,0 +1,32 @@
+.upgrade-button {
+    flex-direction: row;
+    align-items: center;
+    margin-right: var(--spacing-sm, 8px);
+    margin-bottom: var(--spacing-sm, 8px);
+}
+
+.upgrade-button__label {
+    font-size: var(--font-body, 16px);
+    color: var(--color-text, rgb(255, 255, 255));
+    min-width: 120px;
+    margin-right: var(--spacing-sm, 8px);
+}
+
+.upgrade-button__cost {
+    font-size: var(--font-body, 14px);
+    color: var(--color-text-secondary, rgb(180, 180, 180));
+    min-width: 80px;
+    margin-right: var(--spacing-sm, 8px);
+}
+
+.upgrade-button__level {
+    font-size: var(--font-body, 14px);
+    color: var(--color-text-secondary, rgb(180, 180, 180));
+    min-width: 40px;
+    margin-right: var(--spacing-sm, 8px);
+}
+
+.upgrade-button__buy {
+    font-size: var(--font-body, 14px);
+    padding: 4px 12px;
+}

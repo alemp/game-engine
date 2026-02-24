@@ -14,6 +14,9 @@ namespace GameEngine.Core.Config.Schemas
         [JsonProperty("id")]
         public string Id { get; set; }
 
+        [JsonProperty("displayKey")]
+        public string DisplayKey { get; set; }
+
         [JsonProperty("targetProductionId")]
         public string TargetProductionId { get; set; }
 

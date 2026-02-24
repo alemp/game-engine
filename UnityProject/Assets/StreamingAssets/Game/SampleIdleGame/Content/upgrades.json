@@ -2,6 +2,7 @@
   "upgrades": [
     {
       "id": "gold_multiplier_1",
+      "displayKey": "upgrade.gold_multiplier_1",
       "targetProductionId": "gold_generator",
       "effectType": "multiplier",
       "effectValue": 1,

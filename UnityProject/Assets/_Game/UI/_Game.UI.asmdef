@@ -5,6 +5,7 @@
         "GameEngine.Core",
         "GameEngine.Engine.UI","GameEngine.Game.Bootstrap",
         "GameEngine.Modules.Idle",
+        "GameEngine.Modules.Upgrades",
         "UnityEngine.CoreModule",
         "Unity.UI"
     ],

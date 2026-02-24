@@ -37,6 +37,27 @@ namespace GameEngine.Modules.Upgrades
             return _purchasedLevels.TryGetValue(upgradeId, out var level) ? level : 0;
         }
 
+        public BigNumber GetCostForNextLevel(string upgradeId)
+        {
+            if (!_upgradesById.TryGetValue(upgradeId, out var upgrade))
+                return BigNumber.Zero;
+            var level = GetLevel(upgradeId);
+            return GetCost(upgrade, level);
+        }
+
+        public IReadOnlyList<string> GetUpgradeIds()
+        {
+            var list = new List<string>(_upgradesById.Count);
+            foreach (var id in _upgradesById.Keys)
+                list.Add(id);
+            return list;
+        }
+
+        public UpgradeEntry GetUpgrade(string upgradeId)
+        {
+            return _upgradesById.TryGetValue(upgradeId, out var upgrade) ? upgrade : null;
+        }
+
         public bool CanPurchase(string upgradeId)
         {
             if (!_upgradesById.TryGetValue(upgradeId, out var upgrade))

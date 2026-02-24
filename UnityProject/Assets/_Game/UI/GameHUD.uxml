@@ -1,8 +1,12 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEngine.UIElements" xmlns:ge="GameEngine.UI.Components" editor-extension-mode="False">
     <Style src="../../_Engine/UI/Components/ResourceDisplay.uss" />
+    <Style src="../../_Engine/UI/Components/UpgradeButton.uss" />
     <ui:VisualElement name="hud-root" style="flex-grow: 1; padding: 16px;">
         <ui:VisualElement name="resource-container" style="flex-direction: row; flex-wrap: wrap; align-items: center;">
             <!-- ResourceDisplay elements added dynamically from config -->
+        </ui:VisualElement>
+        <ui:VisualElement name="upgrades-container" style="flex-direction: row; flex-wrap: wrap; align-items: center; margin-top: 16px;">
+            <!-- UpgradeButton elements added dynamically from config -->
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
