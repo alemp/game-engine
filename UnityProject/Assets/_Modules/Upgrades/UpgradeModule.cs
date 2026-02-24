@@ -8,7 +8,7 @@ namespace GameEngine.Modules.Upgrades
 {
     /// <summary>
     /// Handles upgrades: purchase, apply effects to production multipliers.
-    /// Linear: cost = base + level * perLevel. Effect = 1 + level * effectValue.
+    /// Supports linear and exponential curves for cost and effect.
     /// </summary>
     public sealed class UpgradeModule
     {
@@ -107,7 +107,7 @@ namespace GameEngine.Modules.Upgrades
                 if (string.IsNullOrEmpty(upgrade.TargetProductionId))
                     continue;
 
-                var effect = 1.0 + level * upgrade.EffectValue;
+                var effect = GetEffect(upgrade, level);
                 if (modifiers.TryGetValue(upgrade.TargetProductionId, out var current))
                     modifiers[upgrade.TargetProductionId] = current * effect;
                 else
@@ -137,8 +137,29 @@ namespace GameEngine.Modules.Upgrades
 
         private static BigNumber GetCost(UpgradeEntry upgrade, int level)
         {
+            var formula = upgrade.CostFormula ?? "linear";
+            if (string.Equals(formula, "exponential", StringComparison.OrdinalIgnoreCase))
+            {
+                var mult = upgrade.CostMultiplier > 0 ? upgrade.CostMultiplier : 1.0;
+                var baseAmount = BigNumber.FromDouble(Math.Max(0, upgrade.CostAmount));
+                var pow = BigNumber.Pow(BigNumber.FromDouble(mult), level);
+                return baseAmount * pow;
+            }
+
             var amount = upgrade.CostAmount + level * upgrade.CostPerLevel;
             return BigNumber.FromDouble(Math.Max(0, amount));
+        }
+
+        private static double GetEffect(UpgradeEntry upgrade, int level)
+        {
+            var formula = upgrade.EffectFormula ?? "linear";
+            if (string.Equals(formula, "exponential", StringComparison.OrdinalIgnoreCase))
+            {
+                var mult = upgrade.EffectMultiplier > 0 ? upgrade.EffectMultiplier : 1.0;
+                return Math.Pow(mult, level);
+            }
+
+            return 1.0 + level * upgrade.EffectValue;
         }
     }
 }

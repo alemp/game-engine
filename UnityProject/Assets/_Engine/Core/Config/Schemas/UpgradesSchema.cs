@@ -35,6 +35,30 @@ namespace GameEngine.Core.Config.Schemas
         [JsonProperty("costPerLevel")]
         public double CostPerLevel { get; set; }
 
+        /// <summary>
+        /// "linear" (default) or "exponential". Linear: base + level * perLevel. Exponential: base * costMultiplier^level.
+        /// </summary>
+        [JsonProperty("costFormula")]
+        public string CostFormula { get; set; } = "linear";
+
+        /// <summary>
+        /// For exponential cost: cost = costAmount * costMultiplier^level.
+        /// </summary>
+        [JsonProperty("costMultiplier")]
+        public double CostMultiplier { get; set; } = 1.0;
+
+        /// <summary>
+        /// "linear" (default) or "exponential". Linear: 1 + level * effectValue. Exponential: effectMultiplier^level.
+        /// </summary>
+        [JsonProperty("effectFormula")]
+        public string EffectFormula { get; set; } = "linear";
+
+        /// <summary>
+        /// For exponential effect: effect = effectMultiplier^level.
+        /// </summary>
+        [JsonProperty("effectMultiplier")]
+        public double EffectMultiplier { get; set; } = 1.0;
+
         [JsonProperty("maxLevel")]
         public int MaxLevel { get; set; } = 1;
 

@@ -24,7 +24,7 @@ Checkboxes track implementation progress. Update this file when completing each 
 - [x] Generators (no input, output only)
 - [x] Resource registration and GetResource/AddResource/TrySpend
 - [x] Multipliers
-- [ ] Configurable exponential curves
+- [x] Configurable exponential curves
 
 ### Theme System
 
@@ -118,7 +118,7 @@ From MASTER_SPEC §6:
 - [ ] Prestige (partial reset, special currency, permanent boost, configurable formula)
 - [x] Localization loading (JSON → runtime strings, fallback to English)
 - [x] Multipliers in production
-- [ ] Configurable exponential curves
+- [x] Configurable exponential curves
 
 ---
 

@@ -10,6 +10,19 @@
       "costAmount": 50,
       "costPerLevel": 0,
       "maxLevel": 1
+    },
+    {
+      "id": "gold_multiplier_2",
+      "displayKey": "upgrade.gold_multiplier_2",
+      "targetProductionId": "gold_generator",
+      "effectFormula": "exponential",
+      "effectMultiplier": 1.5,
+      "costFormula": "exponential",
+      "costAmount": 100,
+      "costMultiplier": 2,
+      "costResourceId": "gold",
+      "costPerLevel": 0,
+      "maxLevel": 5
     }
   ]
 }

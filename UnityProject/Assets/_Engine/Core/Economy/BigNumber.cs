@@ -50,6 +50,31 @@ namespace GameEngine.Core.Economy
             return new BigNumber(mant, exp);
         }
 
+        /// <summary>
+        /// Returns base^exponent. Handles large exponents without double overflow.
+        /// </summary>
+        public static BigNumber Pow(BigNumber baseVal, int exponent)
+        {
+            if (exponent <= 0)
+                return One;
+            if (Math.Abs(baseVal.Mantissa) < Epsilon)
+                return Zero;
+
+            var result = One;
+            var b = baseVal;
+            var exp = exponent;
+
+            while (exp > 0)
+            {
+                if ((exp & 1) == 1)
+                    result = result * b;
+                b = b * b;
+                exp >>= 1;
+            }
+
+            return result;
+        }
+
         public double ToDouble()
         {
             if (Math.Abs(Mantissa) < Epsilon)
