@@ -60,7 +60,7 @@ Checkboxes track implementation progress. Update this file when completing each 
 - [ ] Screen templates from ui.json
 - [ ] HUD layout configurable
 - [ ] Navigation (bottom bar, side HUD, tabs)
-- [ ] ResourceDisplay bound to multiple resources dynamically
+- [x] ResourceDisplay bound to multiple resources dynamically
 
 ### Idle Extensions
 

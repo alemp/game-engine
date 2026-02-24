@@ -1,13 +1,15 @@
 .resource-display {
     flex-direction: row;
     align-items: center;
-    gap: var(--spacing-sm, 8px);
+    margin-right: var(--spacing-sm, 8px);
+    margin-bottom: var(--spacing-sm, 8px);
 }
 
 .resource-display__label {
     font-size: var(--font-body, 16px);
     color: var(--color-text, rgb(255, 255, 255));
     min-width: 80px;
+    margin-right: var(--spacing-sm, 8px);
 }
 
 .resource-display__value {

@@ -1,4 +1,3 @@
-using GameEngine.Core.Config.Schemas;
 using GameEngine.Game.Bootstrap;
 using GameEngine.Modules.Idle;
 using GameEngine.UI.Components;
@@ -9,7 +8,7 @@ using UnityEngine.UIElements;
 namespace GameEngine.Game.UI
 {
     /// <summary>
-    /// HUD that displays idle game resources. Add to a UI Document.
+    /// HUD that displays idle game resources. Binds ResourceDisplay to all resources from config.
     /// </summary>
     public sealed class GameHUD : MonoBehaviour
     {
@@ -18,7 +17,8 @@ namespace GameEngine.Game.UI
 
         private IdleModule _idleModule;
         private VisualElement _root;
-        private Label _goldLabel;
+        private VisualElement _resourceContainer;
+        private bool _resourcesBound;
 
         private void OnEnable()
         {
@@ -45,44 +45,67 @@ namespace GameEngine.Game.UI
             if (_root == null)
                 return;
 
+            _resourceContainer = _root.Q<VisualElement>("resource-container");
+
             if (_bootstrap.Theme != null)
                 ThemeApplier.Apply(_root, _bootstrap.Theme);
 
-            ApplyLocalization();
-
-            _goldLabel = _root.Q<Label>("gold-value");
-            if (_goldLabel == null)
-                _goldLabel = _root.Q<Label>(className: "resource-display__value");
+            BindResourceDisplays();
         }
 
         private void Update()
         {
-            if (_idleModule == null || _goldLabel == null)
+            if (_idleModule == null)
             {
                 TryBind();
                 return;
             }
 
-            var gold = _idleModule.GetResource("gold");
-            _goldLabel.text = gold.ToString();
+            UpdateResourceValues();
         }
 
-        private void ApplyLocalization()
+        private void BindResourceDisplays()
         {
-            if (_bootstrap?.Localization == null || _bootstrap?.ResourceDisplayKeys == null)
+            if (_resourceContainer == null || _bootstrap?.ResourceDisplayKeys == null)
                 return;
 
-            _root.Query<ResourceDisplay>().ForEach(display =>
-            {
-                var resourceId = display.ResourceId;
-                if (string.IsNullOrEmpty(resourceId))
-                    return;
+            _resourceContainer.Clear();
+            _resourcesBound = false;
 
-                if (_bootstrap.ResourceDisplayKeys.TryGetValue(resourceId, out var displayKey))
+            foreach (var (resourceId, displayKey) in _bootstrap.ResourceDisplayKeys)
+            {
+                var display = new ResourceDisplay
+                {
+                    ResourceId = resourceId
+                };
+
+                if (_bootstrap.Localization != null)
                 {
                     var localized = _bootstrap.Localization.GetString(displayKey);
                     display.SetDisplayName(localized);
                 }
+                else
+                {
+                    display.SetDisplayName(displayKey);
+                }
+
+                display.SetValue(_idleModule.GetResource(resourceId));
+                _resourceContainer.Add(display);
+            }
+
+            _resourcesBound = true;
+        }
+
+        private void UpdateResourceValues()
+        {
+            if (!_resourcesBound || _resourceContainer == null)
+                return;
+
+            _resourceContainer.Query<ResourceDisplay>().ForEach(display =>
+            {
+                var resourceId = display.ResourceId;
+                if (!string.IsNullOrEmpty(resourceId))
+                    display.SetValue(_idleModule.GetResource(resourceId));
             });
         }
     }
