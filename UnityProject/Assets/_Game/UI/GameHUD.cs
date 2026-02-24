@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using GameEngine.Game.Bootstrap;
 using GameEngine.Modules.Idle;
 using GameEngine.Modules.Upgrades;
@@ -69,8 +71,28 @@ namespace GameEngine.Game.UI
             if (_bootstrap.Theme != null)
                 ThemeApplier.Apply(_root, _bootstrap.Theme);
 
+            ApplyHudLayout();
             BindResourceDisplays();
             BindUpgradeButtons();
+        }
+
+        private void ApplyHudLayout()
+        {
+            var hud = _bootstrap?.HudConfig;
+            var layout = hud?.Layout ?? "wrap";
+
+            if (_resourceContainer != null)
+            {
+                _resourceContainer.style.flexDirection = layout == "column" ? FlexDirection.Column : FlexDirection.Row;
+                _resourceContainer.style.flexWrap = layout == "wrap" ? Wrap.Wrap : Wrap.NoWrap;
+            }
+
+            if (_upgradesContainer != null)
+            {
+                _upgradesContainer.style.flexDirection = layout == "column" ? FlexDirection.Column : FlexDirection.Row;
+                _upgradesContainer.style.flexWrap = layout == "wrap" ? Wrap.Wrap : Wrap.NoWrap;
+                _upgradesContainer.style.display = (hud?.Upgrades?.Visible ?? true) ? DisplayStyle.Flex : DisplayStyle.None;
+            }
         }
 
         private void Update()
@@ -93,8 +115,12 @@ namespace GameEngine.Game.UI
             _resourceContainer.Clear();
             _resourcesBound = false;
 
-            foreach (var (resourceId, displayKey) in _bootstrap.ResourceDisplayKeys)
+            var ordered = GetOrderedResourceIds();
+            foreach (var resourceId in ordered)
             {
+                if (!_bootstrap.ResourceDisplayKeys.TryGetValue(resourceId, out var displayKey))
+                    continue;
+
                 var display = new ResourceDisplay
                 {
                     ResourceId = resourceId
@@ -117,15 +143,42 @@ namespace GameEngine.Game.UI
             _resourcesBound = true;
         }
 
+        private IEnumerable<string> GetOrderedResourceIds()
+        {
+            var order = _bootstrap?.HudConfig?.Resources?.Order;
+            if (order != null && order.Count > 0)
+            {
+                var set = order.ToHashSet();
+                foreach (var id in order)
+                    if (_bootstrap.ResourceDisplayKeys.ContainsKey(id))
+                        yield return id;
+                foreach (var (id, _) in _bootstrap.ResourceDisplayKeys)
+                    if (!set.Contains(id))
+                        yield return id;
+            }
+            else
+            {
+                foreach (var (id, _) in _bootstrap.ResourceDisplayKeys)
+                    yield return id;
+            }
+        }
+
         private void BindUpgradeButtons()
         {
             if (_upgradesContainer == null || _upgradeModule == null)
                 return;
 
+            if (!(_bootstrap?.HudConfig?.Upgrades?.Visible ?? true))
+            {
+                _upgradesBound = true;
+                return;
+            }
+
             _upgradesContainer.Clear();
             _upgradesBound = false;
 
-            foreach (var upgradeId in _upgradeModule.GetUpgradeIds())
+            var ordered = GetOrderedUpgradeIds();
+            foreach (var upgradeId in ordered)
             {
                 var upgrade = _upgradeModule.GetUpgrade(upgradeId);
                 if (upgrade == null)
@@ -157,6 +210,27 @@ namespace GameEngine.Game.UI
             }
 
             _upgradesBound = true;
+        }
+
+        private IEnumerable<string> GetOrderedUpgradeIds()
+        {
+            var allIds = _upgradeModule.GetUpgradeIds().ToList();
+            var order = _bootstrap?.HudConfig?.Upgrades?.Order;
+            if (order != null && order.Count > 0)
+            {
+                var set = order.ToHashSet();
+                foreach (var id in order)
+                    if (allIds.Contains(id))
+                        yield return id;
+                foreach (var id in allIds)
+                    if (!set.Contains(id))
+                        yield return id;
+            }
+            else
+            {
+                foreach (var id in allIds)
+                    yield return id;
+            }
         }
 
         private void UpdateUpgradeButtons()

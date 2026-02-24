@@ -108,6 +108,19 @@ namespace GameEngine.Core.Config
         }
 
         /// <summary>
+        /// Loads HUD layout from Definitions/hud.json. Returns null if file does not exist.
+        /// </summary>
+        public HudSchema LoadHud()
+        {
+            var path = Path.Combine(_basePath, "Definitions", "hud.json");
+            if (!File.Exists(path))
+                return null;
+
+            var json = File.ReadAllText(path);
+            return JsonConvert.DeserializeObject<HudSchema>(json);
+        }
+
+        /// <summary>
         /// Loads upgrades from Content/upgrades.json. Returns null if file does not exist.
         /// </summary>
         public UpgradesSchema LoadUpgrades()

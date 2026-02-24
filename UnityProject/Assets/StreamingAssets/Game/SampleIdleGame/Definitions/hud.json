@@ -1,0 +1,10 @@
+{
+  "resources": {
+    "order": ["gold"]
+  },
+  "upgrades": {
+    "visible": true,
+    "order": ["gold_multiplier_1"]
+  },
+  "layout": "wrap"
+}
