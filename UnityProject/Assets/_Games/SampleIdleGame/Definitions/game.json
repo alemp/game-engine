@@ -1,0 +1,8 @@
+{
+  "gameId": "SampleIdleGame",
+  "activeModules": ["Idle", "Upgrades"],
+  "economy": {
+    "tickIntervalSeconds": 1.0,
+    "maxOfflineSeconds": 86400
+  }
+}

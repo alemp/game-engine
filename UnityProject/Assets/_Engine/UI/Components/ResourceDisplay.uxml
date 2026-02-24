@@ -1,0 +1,3 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEngine.UIElements" xmlns:ge="GameEngine.UI.Components" editor-extension-mode="False">
+    <ge:ResourceDisplay resource-id="gold" display-name="Gold" />
+</ui:UXML>

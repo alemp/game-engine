@@ -1,0 +1,17 @@
+{
+    "name": "GameEngine.Engine.UI",
+    "rootNamespace": "GameEngine.UI",
+    "references": [
+        "UnityEngine.CoreModule",
+        "Unity.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

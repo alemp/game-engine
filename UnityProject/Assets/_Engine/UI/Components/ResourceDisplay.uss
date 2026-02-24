@@ -1,0 +1,17 @@
+.resource-display {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.resource-display__label {
+    font-size: 14px;
+    color: rgb(255, 255, 255);
+    min-width: 80px;
+}
+
+.resource-display__value {
+    font-size: 18px;
+    font-weight: bold;
+    color: rgb(255, 215, 0);
+}

@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="hud-root" style="flex-grow: 1; padding: 16px;">
+        <ui:VisualElement name="resource-row" style="flex-direction: row; align-items: center; gap: 8px;">
+            <ui:Label text="Gold" style="font-size: 14px; color: rgb(255, 255, 255); min-width: 80px;" />
+            <ui:Label name="gold-value" text="0" style="font-size: 18px; font-weight: bold; color: rgb(255, 215, 0);" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

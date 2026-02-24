@@ -1,0 +1,19 @@
+{
+    "name": "GameEngine.Game.UI",
+    "rootNamespace": "GameEngine.Game.UI",
+    "references": [
+        "GameEngine.Game.Bootstrap",
+        "GameEngine.Modules.Idle",
+        "UnityEngine.CoreModule",
+        "Unity.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

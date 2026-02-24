@@ -1,0 +1,10 @@
+{
+  "productions": [
+    {
+      "id": "gold_generator",
+      "inputs": [],
+      "outputId": "gold",
+      "outputAmount": 1
+    }
+  ]
+}

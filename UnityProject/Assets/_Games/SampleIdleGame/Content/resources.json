@@ -1,0 +1,5 @@
+{
+  "resources": [
+    { "id": "gold", "displayKey": "resource.gold", "initialAmount": 1 }
+  ]
+}
