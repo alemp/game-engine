@@ -18,12 +18,14 @@ namespace GameEngine.Modules.Quests
         private readonly HashSet<string> _completedQuestIds = new();
 
         private readonly Prestige.PrestigeModule _prestigeModule;
+        private readonly Artifacts.ArtifactModule _artifactModule;
 
-        public QuestModule(IdleModule idleModule, UpgradeModule upgradeModule, Prestige.PrestigeModule prestigeModule = null)
+        public QuestModule(IdleModule idleModule, UpgradeModule upgradeModule, Prestige.PrestigeModule prestigeModule = null, Artifacts.ArtifactModule artifactModule = null)
         {
             _idleModule = idleModule ?? throw new ArgumentNullException(nameof(idleModule));
             _upgradeModule = upgradeModule ?? throw new ArgumentNullException(nameof(upgradeModule));
             _prestigeModule = prestigeModule;
+            _artifactModule = artifactModule;
         }
 
         public void RegisterQuests(IReadOnlyList<QuestEntry> entries)
@@ -78,6 +80,9 @@ namespace GameEngine.Modules.Quests
 
             if (!string.IsNullOrEmpty(quest.RewardResourceId) && quest.RewardAmount > 0)
                 _idleModule.AddResource(quest.RewardResourceId, BigNumber.FromDouble(quest.RewardAmount));
+
+            if (!string.IsNullOrEmpty(quest.RewardArtifactId))
+                _artifactModule?.CollectArtifact(quest.RewardArtifactId);
 
             return true;
         }

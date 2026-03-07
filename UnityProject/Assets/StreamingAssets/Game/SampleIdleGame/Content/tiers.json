@@ -1,0 +1,18 @@
+{
+  "tiers": [
+    {
+      "id": "tier_1",
+      "displayKey": "tier.basic",
+      "productionMultiplier": 1.0,
+      "unlockResourceId": null,
+      "unlockMinAmount": 0
+    },
+    {
+      "id": "tier_2",
+      "displayKey": "tier.advanced",
+      "productionMultiplier": 10.0,
+      "unlockResourceId": "gold",
+      "unlockMinAmount": 1000
+    }
+  ]
+}

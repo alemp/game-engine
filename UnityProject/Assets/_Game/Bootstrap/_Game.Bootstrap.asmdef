@@ -8,6 +8,9 @@
         "GameEngine.Modules.Prestige",
         "GameEngine.Modules.Quests",
         "GameEngine.Modules.Events",
+        "GameEngine.Modules.RandomRewards",
+        "GameEngine.Modules.Tiers",
+        "GameEngine.Modules.Artifacts",
         "UnityEngine.CoreModule"
     ],
     "includePlatforms": [],

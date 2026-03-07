@@ -19,5 +19,17 @@ namespace GameEngine.Core.Config.Schemas
 
         [JsonProperty("initialAmount")]
         public double InitialAmount { get; set; } = 1;
+
+        /// <summary>
+        /// Path to icon relative to game folder (e.g. "Art/icons/gold").
+        /// </summary>
+        [JsonProperty("iconPath")]
+        public string IconPath { get; set; }
+
+        /// <summary>
+        /// When true, resource value is kept across prestige (e.g. premium currency).
+        /// </summary>
+        [JsonProperty("persistsOnPrestige")]
+        public bool PersistsOnPrestige { get; set; }
     }
 }

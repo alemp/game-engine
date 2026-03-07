@@ -5,6 +5,17 @@
     margin-bottom: var(--spacing-sm, 8px);
 }
 
+.upgrade-button__icon {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    margin-right: var(--spacing-sm, 8px);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 .upgrade-button__label {
     font-size: var(--font-body, 17px);
     color: var(--color-text, rgb(255, 255, 255));

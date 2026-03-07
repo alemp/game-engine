@@ -1,0 +1,14 @@
+{
+    "name": "GameEngine.Modules.Tiers",
+    "rootNamespace": "GameEngine.Modules.Tiers",
+    "references": ["GameEngine.Core", "GameEngine.Modules.Idle", "GameEngine.Modules.Upgrades"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

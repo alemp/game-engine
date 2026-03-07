@@ -16,7 +16,8 @@
       "targetUpgradeId": "gold_multiplier_1",
       "targetLevel": 1,
       "rewardResourceId": "gold",
-      "rewardAmount": 25
+      "rewardAmount": 25,
+      "rewardArtifactId": "artifact_speed"
     }
   ]
 }

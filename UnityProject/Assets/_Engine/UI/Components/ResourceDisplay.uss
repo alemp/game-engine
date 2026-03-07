@@ -5,6 +5,17 @@
     margin-bottom: var(--spacing-sm, 8px);
 }
 
+.resource-display__icon {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    margin-right: var(--spacing-sm, 8px);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 .resource-display__label {
     font-size: var(--font-body, 16px);
     color: var(--color-text, rgb(255, 255, 255));
@@ -16,4 +27,10 @@
     font-size: var(--font-numbers, 18px);
     -unity-font-style: bold;
     color: var(--color-accent, rgb(255, 215, 0));
+}
+
+.resource-display__rate {
+    font-size: var(--font-body, 14px);
+    color: var(--color-text-secondary, rgba(255, 255, 255, 0.7));
+    margin-left: var(--spacing-sm, 8px);
 }

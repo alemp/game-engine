@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using GameEngine.Core.Economy;
 using GameEngine.Game.Bootstrap;
 using GameEngine.Modules.Idle;
 using GameEngine.Modules.Upgrades;
@@ -24,10 +25,16 @@ namespace GameEngine.Game.UI
         private VisualElement _hudRoot;
         private VisualElement _resourceContainer;
         private VisualElement _upgradesContainer;
+        private VisualElement _actionsContainer;
+        private VisualElement _artifactsContainer;
         private VisualElement _sectionResources;
         private VisualElement _sectionUpgrades;
+        private VisualElement _sectionActions;
+        private VisualElement _sectionArtifacts;
         private bool _resourcesBound;
         private bool _upgradesBound;
+        private bool _actionsBound;
+        private int _lastArtifactCount = -1;
 
         private void OnEnable()
         {
@@ -65,15 +72,21 @@ namespace GameEngine.Game.UI
             _hudRoot = _root.Q<VisualElement>("hud-root") ?? _root;
             _resourceContainer = _root.Q<VisualElement>("resource-container");
             _upgradesContainer = _root.Q<VisualElement>("upgrades-container");
+            _actionsContainer = _root.Q<VisualElement>("actions-container");
+            _artifactsContainer = _root.Q<VisualElement>("artifacts-container");
             _sectionResources = _root.Q<VisualElement>("section-resources");
             _sectionUpgrades = _root.Q<VisualElement>("section-upgrades");
+            _sectionActions = _root.Q<VisualElement>("section-actions");
+            _sectionArtifacts = _root.Q<VisualElement>("section-artifacts");
 
             if (_bootstrap.Theme != null)
                 ThemeApplier.Apply(_root, _bootstrap.Theme);
 
             ApplyHudLayout();
             BindResourceDisplays();
+            BindActionButtons();
             BindUpgradeButtons();
+            BindArtifacts();
         }
 
         private void TryBind()
@@ -105,15 +118,21 @@ namespace GameEngine.Game.UI
             _hudRoot = _root.Q<VisualElement>("hud-root") ?? _root;
             _resourceContainer = _root.Q<VisualElement>("resource-container");
             _upgradesContainer = _root.Q<VisualElement>("upgrades-container");
+            _actionsContainer = _root.Q<VisualElement>("actions-container");
+            _artifactsContainer = _root.Q<VisualElement>("artifacts-container");
             _sectionResources = _root.Q<VisualElement>("section-resources");
             _sectionUpgrades = _root.Q<VisualElement>("section-upgrades");
+            _sectionActions = _root.Q<VisualElement>("section-actions");
+            _sectionArtifacts = _root.Q<VisualElement>("section-artifacts");
 
             if (_bootstrap.Theme != null)
                 ThemeApplier.Apply(_root, _bootstrap.Theme);
 
             ApplyHudLayout();
             BindResourceDisplays();
+            BindActionButtons();
             BindUpgradeButtons();
+            BindArtifacts();
         }
 
         private void TryLoadTemplateFromConfig()
@@ -148,6 +167,12 @@ namespace GameEngine.Game.UI
                     _sectionUpgrades.style.display = (hud?.Upgrades?.Visible ?? true) ? DisplayStyle.Flex : DisplayStyle.None;
             }
 
+            if (_sectionActions != null)
+                _sectionActions.style.display = (hud?.ActionsVisible ?? true) ? DisplayStyle.Flex : DisplayStyle.None;
+
+            if (_sectionArtifacts != null)
+                _sectionArtifacts.style.display = (hud?.ArtifactsVisible ?? true) ? DisplayStyle.Flex : DisplayStyle.None;
+
             ApplySectionHeaders();
             ApplySectionOrder();
         }
@@ -172,6 +197,20 @@ namespace GameEngine.Game.UI
                 if (header != null)
                     header.text = _bootstrap.Localization?.GetString(upgKey) ?? upgKey;
             }
+
+            if (labels.TryGetValue("actions", out var actKey) && _sectionActions != null)
+            {
+                var header = _sectionActions.Q<Label>();
+                if (header != null)
+                    header.text = _bootstrap.Localization?.GetString(actKey) ?? actKey;
+            }
+
+            if (labels.TryGetValue("artifacts", out var artKey) && _sectionArtifacts != null)
+            {
+                var header = _sectionArtifacts.Q<Label>();
+                if (header != null)
+                    header.text = _bootstrap.Localization?.GetString(artKey) ?? artKey;
+            }
         }
 
         private void ApplySectionOrder()
@@ -180,20 +219,19 @@ namespace GameEngine.Game.UI
             if (order == null || order.Count == 0 || _hudRoot == null)
                 return;
 
-            var resources = _sectionResources;
-            var upgrades = _sectionUpgrades;
-            if (resources == null || upgrades == null)
-                return;
+            var sections = new Dictionary<string, VisualElement>();
+            if (_sectionResources != null) sections["resources"] = _sectionResources;
+            if (_sectionUpgrades != null) sections["upgrades"] = _sectionUpgrades;
+            if (_sectionActions != null) sections["actions"] = _sectionActions;
+            if (_sectionArtifacts != null) sections["artifacts"] = _sectionArtifacts;
 
-            resources.RemoveFromHierarchy();
-            upgrades.RemoveFromHierarchy();
+            foreach (var s in sections.Values)
+                s.RemoveFromHierarchy();
 
             foreach (var id in order)
             {
-                if (id == "resources")
-                    _hudRoot.Add(resources);
-                else if (id == "upgrades")
-                    _hudRoot.Add(upgrades);
+                if (sections.TryGetValue(id, out var section))
+                    _hudRoot.Add(section);
             }
         }
 
@@ -207,6 +245,14 @@ namespace GameEngine.Game.UI
 
             UpdateResourceValues();
             UpdateUpgradeButtons();
+            UpdateActionButtons();
+
+            var artifactCount = _bootstrap?.ArtifactModule?.GetCollectedIds().Count ?? 0;
+            if (artifactCount != _lastArtifactCount)
+            {
+                _lastArtifactCount = artifactCount;
+                BindArtifacts();
+            }
         }
 
         private void BindResourceDisplays()
@@ -242,10 +288,111 @@ namespace GameEngine.Game.UI
                 }
 
                 display.SetValue(_idleModule.GetResource(resourceId));
+
+                if (_bootstrap.ResourceIconPaths != null &&
+                    _bootstrap.ResourceIconPaths.TryGetValue(resourceId, out var iconPath))
+                {
+                    var texture = LoadResourceIcon(resourceId, iconPath);
+                    display.SetIcon(texture);
+                }
+                else
+                {
+                    display.SetIcon(null);
+                }
+
+                var productionPerSec = GetProductionRatePerSecond(resourceId);
+                display.SetProductionRate(productionPerSec);
+
                 _resourceContainer.Add(display);
             }
 
             _resourcesBound = true;
+        }
+
+        private void BindActionButtons()
+        {
+            if (_actionsContainer == null)
+                return;
+
+            _actionsContainer.Clear();
+            _actionsBound = false;
+
+            var manualIds = _idleModule?.GetManualProductionIds();
+            if (manualIds != null && manualIds.Count > 0)
+            {
+                foreach (var prodId in manualIds)
+                {
+                    var btn = new Button { text = "Tap" };
+                    btn.AddToClassList("hud-action-button");
+                    btn.AddToClassList("hud-action-button--primary");
+                    var capture = prodId;
+                    btn.clicked += () =>
+                    {
+                        if (_bootstrap?.IdleModule != null)
+                            _bootstrap.IdleModule.TriggerManualProduction(capture);
+                    };
+                    _actionsContainer.Add(btn);
+                }
+            }
+
+            if (_bootstrap?.PrestigeModule != null)
+            {
+                var prestigeBtn = new Button();
+                prestigeBtn.AddToClassList("hud-action-button");
+                prestigeBtn.clicked += () => _bootstrap.TryPrestige();
+                _actionsContainer.Add(prestigeBtn);
+            }
+
+            if (_bootstrap?.TierModule != null)
+            {
+                var ascendBtn = new Button();
+                ascendBtn.AddToClassList("hud-action-button");
+                ascendBtn.clicked += () => _bootstrap.TryAscendTier();
+                _actionsContainer.Add(ascendBtn);
+            }
+
+            _actionsBound = true;
+        }
+
+        private void BindArtifacts()
+        {
+            if (_artifactsContainer == null || _bootstrap?.ArtifactModule == null)
+                return;
+
+            _artifactsContainer.Clear();
+            _lastArtifactCount = _bootstrap.ArtifactModule.GetCollectedIds().Count;
+
+            var collected = _bootstrap.ArtifactModule.GetCollectedIds();
+            foreach (var id in collected)
+            {
+                var artifact = _bootstrap.ArtifactModule.GetArtifact(id);
+                if (artifact == null)
+                    continue;
+
+                var badge = new VisualElement();
+                badge.AddToClassList("artifact-badge");
+
+                var icon = new VisualElement();
+                icon.AddToClassList("artifact-badge__icon");
+                if (!string.IsNullOrEmpty(artifact.IconPath))
+                {
+                    var texture = LoadArtifactIcon(id, artifact.IconPath);
+                    if (texture != null)
+                    {
+                        icon.style.backgroundImage = new StyleBackground(texture);
+                        icon.style.display = DisplayStyle.Flex;
+                    }
+                }
+                badge.Add(icon);
+
+                var label = new Label();
+                label.AddToClassList("artifact-badge__label");
+                var displayKey = !string.IsNullOrEmpty(artifact.DisplayKey) ? artifact.DisplayKey : $"artifact.{id}";
+                label.text = _bootstrap.Localization?.GetString(displayKey) ?? displayKey;
+                badge.Add(label);
+
+                _artifactsContainer.Add(badge);
+            }
         }
 
         private IEnumerable<string> GetOrderedResourceIds()
@@ -309,6 +456,16 @@ namespace GameEngine.Game.UI
                 else
                 {
                     button.SetDisplayName(displayKey);
+                }
+
+                if (!string.IsNullOrEmpty(upgrade.IconPath))
+                {
+                    var texture = LoadUpgradeIcon(upgradeId, upgrade.IconPath);
+                    button.SetIcon(texture);
+                }
+                else
+                {
+                    button.SetIcon(null);
                 }
 
                 var upgradeIdCapture = upgradeId;
@@ -391,8 +548,86 @@ namespace GameEngine.Game.UI
             {
                 var resourceId = display.ResourceId;
                 if (!string.IsNullOrEmpty(resourceId))
+                {
                     display.SetValue(_idleModule.GetResource(resourceId));
+                    display.SetProductionRate(GetProductionRatePerSecond(resourceId));
+                }
             });
+        }
+
+        private BigNumber GetProductionRatePerSecond(string resourceId)
+        {
+            if (_idleModule == null || _bootstrap == null)
+                return BigNumber.Zero;
+
+            var perTick = _idleModule.GetNetProductionPerTick(resourceId);
+            var tickInterval = _bootstrap.TickIntervalSeconds;
+            if (tickInterval <= 0)
+                return BigNumber.Zero;
+
+            return perTick / BigNumber.FromDouble(tickInterval);
+        }
+
+        private Texture2D LoadResourceIcon(string resourceId, string iconPath)
+        {
+            if (string.IsNullOrEmpty(iconPath) || _bootstrap == null)
+                return null;
+
+            var resourcesPath = "Game/" + _bootstrap.GameId + "/" + iconPath;
+            return Resources.Load<Texture2D>(resourcesPath);
+        }
+
+        private Texture2D LoadUpgradeIcon(string upgradeId, string iconPath)
+        {
+            if (string.IsNullOrEmpty(iconPath) || _bootstrap == null)
+                return null;
+
+            var resourcesPath = "Game/" + _bootstrap.GameId + "/" + iconPath;
+            return Resources.Load<Texture2D>(resourcesPath);
+        }
+
+        private Texture2D LoadArtifactIcon(string artifactId, string iconPath)
+        {
+            if (string.IsNullOrEmpty(iconPath) || _bootstrap == null)
+                return null;
+
+            var resourcesPath = "Game/" + _bootstrap.GameId + "/" + iconPath;
+            return Resources.Load<Texture2D>(resourcesPath);
+        }
+
+        private void UpdateActionButtons()
+        {
+            if (!_actionsBound || _actionsContainer == null)
+                return;
+
+            var buttons = _actionsContainer.Query<Button>().ToList();
+            var idx = 0;
+
+            if (_idleModule?.GetManualProductionIds() is { Count: > 0 })
+                idx += _idleModule.GetManualProductionIds().Count;
+
+            if (_bootstrap?.PrestigeModule != null && idx < buttons.Count)
+            {
+                var prestigeBtn = buttons[idx++];
+                var canPrestige = _bootstrap.PrestigeModule.CanPrestige();
+                var currencyId = _bootstrap.PrestigeModule.GetCurrencyResourceId();
+                var amount = _bootstrap.IdleModule.GetResource(currencyId);
+                var currencyName = GetResourceDisplayName(currencyId);
+                prestigeBtn.text = $"Prestige ({amount} {currencyName})";
+                prestigeBtn.SetEnabled(canPrestige);
+            }
+
+            if (_bootstrap?.TierModule != null && idx < buttons.Count)
+            {
+                var ascendBtn = buttons[idx];
+                var canAscend = _bootstrap.TierModule.CanAscend();
+                var next = _bootstrap.TierModule.GetNextTier();
+                var nextName = next != null && _bootstrap.Localization != null
+                    ? _bootstrap.Localization.GetString(next.DisplayKey) ?? next.Id
+                    : "Ascend";
+                ascendBtn.text = $"Ascend → {nextName}";
+                ascendBtn.SetEnabled(canAscend);
+            }
         }
     }
 }

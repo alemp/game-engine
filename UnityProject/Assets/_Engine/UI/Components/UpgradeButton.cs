@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace GameEngine.UI.Components
@@ -10,6 +11,7 @@ namespace GameEngine.UI.Components
     public partial class UpgradeButton : VisualElement
     {
         public static readonly string UssClassName = "upgrade-button";
+        public static readonly string IconUssClassName = "upgrade-button__icon";
         public static readonly string LabelUssClassName = "upgrade-button__label";
         public static readonly string CostUssClassName = "upgrade-button__cost";
         public static readonly string LevelUssClassName = "upgrade-button__level";
@@ -18,6 +20,7 @@ namespace GameEngine.UI.Components
         [UxmlAttribute("upgrade-id")]
         public string UpgradeId { get; set; }
 
+        private readonly VisualElement _icon;
         private readonly Label _label;
         private readonly Label _costLabel;
         private readonly Label _levelLabel;
@@ -27,6 +30,10 @@ namespace GameEngine.UI.Components
         public UpgradeButton()
         {
             AddToClassList(UssClassName);
+
+            _icon = new VisualElement();
+            _icon.AddToClassList(IconUssClassName);
+            Add(_icon);
 
             _label = new Label { text = "—" };
             _label.AddToClassList(LabelUssClassName);
@@ -49,6 +56,23 @@ namespace GameEngine.UI.Components
         public void SetDisplayName(string name)
         {
             _label.text = name ?? "—";
+        }
+
+        /// <summary>
+        /// Sets the upgrade icon. Pass null to hide.
+        /// </summary>
+        public void SetIcon(Texture2D texture)
+        {
+            if (texture != null)
+            {
+                _icon.style.backgroundImage = new StyleBackground(texture);
+                _icon.style.display = DisplayStyle.Flex;
+            }
+            else
+            {
+                _icon.style.backgroundImage = StyleKeyword.Null;
+                _icon.style.display = DisplayStyle.None;
+            }
         }
 
         public void SetCost(string costText)

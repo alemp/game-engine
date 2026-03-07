@@ -17,6 +17,12 @@ namespace GameEngine.Core.Config.Schemas
         [JsonProperty("displayKey")]
         public string DisplayKey { get; set; }
 
+        /// <summary>
+        /// Path to icon relative to game folder (e.g. "Art/icons/upgrade_gold").
+        /// </summary>
+        [JsonProperty("iconPath")]
+        public string IconPath { get; set; }
+
         [JsonProperty("targetProductionId")]
         public string TargetProductionId { get; set; }
 
@@ -61,6 +67,12 @@ namespace GameEngine.Core.Config.Schemas
 
         [JsonProperty("maxLevel")]
         public int MaxLevel { get; set; } = 1;
+
+        /// <summary>
+        /// When true, upgrade level is kept across prestige (epic/permanent upgrades).
+        /// </summary>
+        [JsonProperty("persistsOnPrestige")]
+        public bool PersistsOnPrestige { get; set; }
 
         [JsonProperty("unlockCondition")]
         public UnlockConditionSchema UnlockCondition { get; set; }

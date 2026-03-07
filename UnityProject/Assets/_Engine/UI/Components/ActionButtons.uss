@@ -1,0 +1,58 @@
+/* Action buttons: tap, prestige, ascend */
+
+.hud-action-button {
+    min-height: 48px;
+    padding: 12px 20px;
+    margin-right: var(--spacing-sm, 8px);
+    margin-bottom: var(--spacing-sm, 8px);
+    background-color: var(--color-card-bg, rgb(37, 37, 48));
+    border-radius: var(--radius-button, 8px);
+    border-width: 1px;
+    border-color: var(--color-card-border, rgb(58, 58, 69));
+    font-size: var(--font-body, 16px);
+    color: var(--color-text, rgb(255, 255, 255));
+}
+
+.hud-action-button:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.hud-action-button:disabled {
+    opacity: 0.5;
+}
+
+.hud-action-button--primary {
+    background-color: var(--color-accent, rgb(255, 215, 0));
+    color: rgb(30, 30, 30);
+}
+
+.hud-action-button--primary:hover:not(:disabled) {
+    background-color: rgba(255, 215, 0, 0.9);
+}
+
+.artifact-badge {
+    flex-direction: row;
+    align-items: center;
+    min-height: 44px;
+    min-width: 120px;
+    background-color: rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-button, 8px);
+    padding: 10px 14px;
+    margin-right: var(--spacing-sm, 8px);
+    margin-bottom: var(--spacing-sm, 8px);
+}
+
+.artifact-badge__icon {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    margin-right: var(--spacing-sm, 8px);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.artifact-badge__label {
+    font-size: 14px;
+    color: var(--color-text-secondary, rgb(180, 180, 180));
+}

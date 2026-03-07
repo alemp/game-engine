@@ -1,1 +1,1 @@
-{"resources":[{"id":"gold","displayKey":"resource.gold","initialAmount":1}]}
+{"resources":[{"id":"gold","displayKey":"resource.gold","initialAmount":1,"iconPath":"Art/icons/gold"},{"id":"souls","displayKey":"resource.souls","initialAmount":0,"iconPath":"Art/icons/souls"}]}

@@ -31,6 +31,12 @@ namespace GameEngine.Core.SaveSystem
 
         [JsonProperty("completedQuests")]
         public List<string> CompletedQuests { get; set; }
+
+        [JsonProperty("currentTier")]
+        public int CurrentTier { get; set; }
+
+        [JsonProperty("collectedArtifacts")]
+        public List<string> CollectedArtifacts { get; set; }
     }
 
     public sealed class SchedulerSaveData

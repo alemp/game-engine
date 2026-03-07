@@ -17,6 +17,8 @@ namespace GameEngine.Modules.Prestige
         private readonly UpgradeModule _upgradeModule;
         private PrestigeSchema _config;
         private BigNumber _prestigeCurrency;
+        private HashSet<string> _persistedResourceIds = new();
+        private HashSet<string> _persistedUpgradeIds = new();
 
         public PrestigeModule(IdleModule idleModule, UpgradeModule upgradeModule)
         {
@@ -27,6 +29,22 @@ namespace GameEngine.Modules.Prestige
         public void Configure(PrestigeSchema config)
         {
             _config = config;
+        }
+
+        /// <summary>
+        /// Sets resource IDs that persist across prestige (e.g. premium currency).
+        /// </summary>
+        public void SetPersistedResourceIds(IReadOnlyList<string> ids)
+        {
+            _persistedResourceIds = ids != null ? new HashSet<string>(ids) : new HashSet<string>();
+        }
+
+        /// <summary>
+        /// Sets upgrade IDs that persist across prestige (epic/permanent upgrades).
+        /// </summary>
+        public void SetPersistedUpgradeIds(IReadOnlyList<string> ids)
+        {
+            _persistedUpgradeIds = ids != null ? new HashSet<string>(ids) : new HashSet<string>();
         }
 
         public string GetCurrencyResourceId()
@@ -69,11 +87,25 @@ namespace GameEngine.Modules.Prestige
             _prestigeCurrency = _prestigeCurrency + BigNumber.FromDouble(earned);
 
             ResetResources();
-            _upgradeModule?.ApplyPurchasedLevels(new Dictionary<string, int>());
+            ApplyUpgradeReset();
             onSchedulerReset?.Invoke();
 
             ApplyBoost();
             return true;
+        }
+
+        private void ApplyUpgradeReset()
+        {
+            if (_upgradeModule == null)
+                return;
+
+            var current = _upgradeModule.GetPurchasedLevels();
+            var levelsToApply = new Dictionary<string, int>();
+            foreach (var (id, level) in current)
+            {
+                levelsToApply[id] = _persistedUpgradeIds.Contains(id) ? level : 0;
+            }
+            _upgradeModule.ApplyPurchasedLevels(levelsToApply);
         }
 
         public double GetBoostMultiplier()
@@ -119,8 +151,15 @@ namespace GameEngine.Modules.Prestige
             var currencyId = _config?.CurrencyResourceId;
             var resources = _idleModule.GetResourceSnapshot();
             var initial = new Dictionary<string, BigNumber>();
-            foreach (var (id, _) in resources)
-                initial[id] = id == currencyId ? _prestigeCurrency : BigNumber.Zero;
+            foreach (var (id, amount) in resources)
+            {
+                if (id == currencyId)
+                    initial[id] = _prestigeCurrency;
+                else if (_persistedResourceIds.Contains(id))
+                    initial[id] = amount;
+                else
+                    initial[id] = BigNumber.Zero;
+            }
             _idleModule.ApplyResources(initial);
         }
 

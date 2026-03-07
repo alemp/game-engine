@@ -63,9 +63,9 @@ namespace GameEngine.Game.Editor
             foreach (var (id, amount) in loader.GetResourceDefinitions())
                 idleModule.RegisterResource(id, amount);
 
-            foreach (var (id, inputs, outputId, outputAmount, multiplier) in loader.GetProductionRules())
+            foreach (var (id, inputs, outputId, outputAmount, multiplier, trigger) in loader.GetProductionRules())
             {
-                idleModule.AddProductionRule(new ProductionRule(id, inputs, outputId, outputAmount, multiplier));
+                idleModule.AddProductionRule(new ProductionRule(id, inputs, outputId, outputAmount, multiplier, trigger));
             }
 
             idleModule.SimulateTicks(ticks);

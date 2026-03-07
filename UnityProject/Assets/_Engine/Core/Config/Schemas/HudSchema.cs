@@ -18,16 +18,28 @@ namespace GameEngine.Core.Config.Schemas
         public string Layout { get; set; } = "wrap";
 
         /// <summary>
-        /// Section order: "resources", "upgrades", "actions". Defines display order and which sections to show.
+        /// Section order: "resources", "upgrades", "actions", "artifacts". Defines display order and which sections to show.
         /// </summary>
         [JsonProperty("sectionOrder")]
         public List<string> SectionOrder { get; set; }
 
         /// <summary>
-        /// Section label keys for localization. Keys: "resources", "upgrades", "actions".
+        /// Section label keys for localization. Keys: "resources", "upgrades", "actions", "artifacts".
         /// </summary>
         [JsonProperty("sectionLabels")]
         public Dictionary<string, string> SectionLabels { get; set; }
+
+        /// <summary>
+        /// Show actions section (tap, prestige, ascend). Default true.
+        /// </summary>
+        [JsonProperty("actionsVisible")]
+        public bool ActionsVisible { get; set; } = true;
+
+        /// <summary>
+        /// Show artifacts section. Default true.
+        /// </summary>
+        [JsonProperty("artifactsVisible")]
+        public bool ArtifactsVisible { get; set; } = true;
 
         /// <summary>
         /// Use card-based layout for resources and upgrades. "card" | "flat".

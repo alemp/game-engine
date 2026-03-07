@@ -28,6 +28,12 @@ namespace GameEngine.Core.Config.Schemas
         /// </summary>
         [JsonProperty("multiplier")]
         public double Multiplier { get; set; } = 1.0;
+
+        /// <summary>
+        /// "tick" (default) = runs every scheduler tick. "manual" = runs only when TriggerManualProduction is called.
+        /// </summary>
+        [JsonProperty("trigger")]
+        public string Trigger { get; set; } = "tick";
     }
 
     public sealed class ProductionInput

@@ -1,1 +1,6 @@
-{"productions":[{"id":"gold_generator","inputs":[],"outputId":"gold","outputAmount":1,"multiplier":2}]}
+{
+  "productions": [
+    {"id": "gold_generator", "inputs": [], "outputId": "gold", "outputAmount": 1, "multiplier": 2, "trigger": "tick"},
+    {"id": "tap_action", "inputs": [], "outputId": "gold", "outputAmount": 0.5, "trigger": "manual"}
+  ]
+}

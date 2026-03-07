@@ -1,8 +1,8 @@
+using System;
+using System.Collections.Generic;
 using GameEngine.Core.Economy;
 using GameEngine.Core.EventBus;
 using GameEngine.Core.Scheduler;
-using System;
-using System.Collections.Generic;
 
 namespace GameEngine.Modules.Idle
 {
@@ -19,6 +19,8 @@ namespace GameEngine.Modules.Idle
         private readonly Dictionary<string, double> _productionMultipliers = new();
         private readonly Dictionary<string, double> _eventMultipliers = new();
         private double _prestigeMultiplier = 1.0;
+        private double _tierMultiplier = 1.0;
+        private double _artifactMultiplier = 1.0;
 
         public IReadOnlyDictionary<string, BigNumber> Resources => _resources;
 
@@ -90,13 +92,13 @@ namespace GameEngine.Modules.Idle
         }
 
         /// <summary>
-        /// Gets the current multiplier for a production (upgrade * prestige * event).
+        /// Gets the current multiplier for a production (upgrade * prestige * tier * artifact * event).
         /// </summary>
         public double GetProductionMultiplier(string productionId)
         {
             var upgrade = _productionMultipliers.TryGetValue(productionId, out var m) ? m : 1.0;
             var eventMult = _eventMultipliers.TryGetValue(productionId, out var em) ? em : 1.0;
-            return upgrade * _prestigeMultiplier * eventMult;
+            return upgrade * _prestigeMultiplier * _tierMultiplier * _artifactMultiplier * eventMult;
         }
 
         /// <summary>
@@ -126,7 +128,24 @@ namespace GameEngine.Modules.Idle
         }
 
         /// <summary>
+        /// Sets the tier multiplier (applies to all productions). Used by TierModule.
+        /// </summary>
+        public void SetTierMultiplier(double multiplier)
+        {
+            _tierMultiplier = multiplier > 0 ? multiplier : 1.0;
+        }
+
+        /// <summary>
+        /// Sets the artifact multiplier (applies to all productions). Used by ArtifactModule.
+        /// </summary>
+        public void SetArtifactMultiplier(double multiplier)
+        {
+            _artifactMultiplier = multiplier > 0 ? multiplier : 1.0;
+        }
+
+        /// <summary>
         /// Runs production for the given number of ticks (e.g. for offline progress).
+        /// Only tick-triggered productions run; manual productions are excluded.
         /// </summary>
         public void SimulateTicks(int count)
         {
@@ -134,6 +153,8 @@ namespace GameEngine.Modules.Idle
             {
                 foreach (var rule in _productionRules)
                 {
+                    if (rule.Trigger == "manual")
+                        continue;
                     if (rule.Inputs.Count > 0 && !CanAfford(rule.Inputs))
                         continue;
 
@@ -144,6 +165,46 @@ namespace GameEngine.Modules.Idle
                     AddResource(rule.OutputId, rule.GetEffectiveOutput(upgradeMult));
                 }
             }
+        }
+
+        /// <summary>
+        /// Triggers a manual production (tap/click action). Returns true if production ran.
+        /// </summary>
+        public bool TriggerManualProduction(string productionId)
+        {
+            if (string.IsNullOrEmpty(productionId))
+                return false;
+
+            foreach (var rule in _productionRules)
+            {
+                if (rule.Id != productionId || rule.Trigger != "manual")
+                    continue;
+
+                if (rule.Inputs.Count > 0 && !CanAfford(rule.Inputs))
+                    return false;
+
+                foreach (var (resId, amount) in rule.Inputs)
+                    TrySpend(resId, amount);
+
+                var upgradeMult = GetProductionMultiplier(rule.Id);
+                AddResource(rule.OutputId, rule.GetEffectiveOutput(upgradeMult));
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns IDs of manual-triggered productions (for UI tap binding).
+        /// </summary>
+        public IReadOnlyList<string> GetManualProductionIds()
+        {
+            var list = new List<string>();
+            foreach (var rule in _productionRules)
+            {
+                if (rule.Trigger == "manual")
+                    list.Add(rule.Id);
+            }
+            return list;
         }
 
         /// <summary>
@@ -169,10 +230,41 @@ namespace GameEngine.Modules.Idle
             return copy;
         }
 
+        /// <summary>
+        /// Returns net production per tick for a resource (outputs minus inputs).
+        /// Only tick-triggered productions are included.
+        /// </summary>
+        public BigNumber GetNetProductionPerTick(string resourceId)
+        {
+            if (string.IsNullOrEmpty(resourceId))
+                return BigNumber.Zero;
+
+            var net = BigNumber.Zero;
+            foreach (var rule in _productionRules)
+            {
+                if (rule.Trigger == "manual")
+                    continue;
+                if (rule.OutputId == resourceId)
+                {
+                    var mult = GetProductionMultiplier(rule.Id);
+                    net = net + rule.GetEffectiveOutput(mult);
+                }
+
+                foreach (var (resId, amount) in rule.Inputs)
+                {
+                    if (resId == resourceId)
+                        net = net - amount;
+                }
+            }
+            return net;
+        }
+
         private void OnTick(int tick)
         {
             foreach (var rule in _productionRules)
             {
+                if (rule.Trigger == "manual")
+                    continue;
                 if (rule.Inputs.Count > 0 && !CanAfford(rule.Inputs))
                     continue;
 
@@ -208,19 +300,22 @@ namespace GameEngine.Modules.Idle
         public string OutputId { get; }
         public BigNumber OutputAmount { get; }
         public double BaseMultiplier { get; }
+        public string Trigger { get; }
 
         public ProductionRule(
             string id,
             IReadOnlyList<(string ResourceId, BigNumber Amount)> inputs,
             string outputId,
             BigNumber outputAmount,
-            double baseMultiplier = 1.0)
+            double baseMultiplier = 1.0,
+            string trigger = "tick")
         {
             Id = id ?? outputId ?? throw new ArgumentNullException(nameof(id));
             Inputs = inputs ?? throw new ArgumentNullException(nameof(inputs));
             OutputId = outputId ?? throw new ArgumentNullException(nameof(outputId));
             OutputAmount = outputAmount;
             BaseMultiplier = baseMultiplier > 0 ? baseMultiplier : 1.0;
+            Trigger = string.Equals(trigger, "manual", StringComparison.OrdinalIgnoreCase) ? "manual" : "tick";
         }
 
         /// <summary>

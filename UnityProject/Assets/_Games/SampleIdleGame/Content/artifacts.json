@@ -1,0 +1,11 @@
+{
+  "artifacts": [
+    {
+      "id": "artifact_speed",
+      "displayKey": "artifact.speed",
+      "iconPath": "Art/icons/artifact_speed",
+      "effectType": "production_multiplier",
+      "effectValue": 1.1
+    }
+  ]
+}

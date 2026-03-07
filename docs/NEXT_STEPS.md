@@ -69,6 +69,9 @@ Checkboxes track implementation progress. Update this file when completing each 
 - [x] PrestigeModule (partial reset, special currency, boost)
 - [x] QuestModule
 - [x] EventModule (temporary events)
+- [x] RandomRewardModule (periodic/chance rewards)
+- [x] TierModule (progression tiers)
+- [x] ArtifactModule (collectible bonuses)
 
 ### Monetization
 
@@ -100,15 +103,15 @@ Checkboxes track implementation progress. Update this file when completing each 
 
 ### Phase B – Icons & Production
 
-- [ ] resources.json: add `iconPath` per resource
-- [ ] upgrades.json: add `iconPath` per upgrade
-- [ ] ResourceDisplay: support icon, production rate (+X/sec)
-- [ ] BigNumber formatting (K, M, B, etc.) for display
-- [ ] Per-game icon folder: `_Games/<id>/Art/icons/`
+- [x] resources.json: add `iconPath` per resource
+- [x] upgrades.json: add `iconPath` per upgrade
+- [x] ResourceDisplay: support icon, production rate (+X/sec)
+- [x] BigNumber formatting (K, M, B, etc.) for display
+- [x] Per-game icon folder: `_Games/<id>/Art/icons/`
 
 ### Phase C – Module UI
 
-- [ ] Prestige: button + prestige currency display in HUD
+- [x] Prestige: button + prestige currency display in HUD
 - [ ] Quests: panel with list, progress bars, claim button
 - [ ] Events: active event banner + countdown timer
 - [ ] hud.json / ui.json: configurable section visibility per module
@@ -141,6 +144,21 @@ Checkboxes track implementation progress. Update this file when completing each 
 - [ ] RunnerModule (stub)
 - [ ] PuzzleModule (stub)
 - [ ] Match3Module (stub)
+
+---
+
+## Phase 2E – Idle V2 Extensions (Generic Egg Inc.–like)
+
+See [docs/IDLE_V2_FEATURES.md](IDLE_V2_FEATURES.md) for full spec.
+
+- [x] Resources: `persistsOnPrestige` (premium currency)
+- [x] Upgrades: `persistsOnPrestige` (epic/permanent upgrades)
+- [x] Production: `trigger: "manual"` (tap/click action)
+- [x] IdleModule.TriggerManualProduction(productionId)
+- [x] RandomRewardModule (random_rewards.json)
+- [x] UI: Tap button bound to manual production
+- [x] hud.json: configurable manual production display
+- [x] UI: Tier ascend button, Artifact panel
 
 ---
 

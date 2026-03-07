@@ -32,6 +32,8 @@
 - **Build**: Config loads from `StreamingAssets/Game/<gameId>/`
 - `StreamingAssets/Game/SampleIdleGame/` is pre-populated for builds
 - To add a new game, copy config to both `_Games/` and `StreamingAssets/Game/`
+- Config files: game.json, resources.json, production.json, upgrades.json, prestige.json, quests.json, events.json, random_rewards.json, tiers.json, artifacts.json
+- For resource/upgrade icons: place PNGs in `_Games/<gameId>/Art/icons/` and mirror to `Resources/Game/<gameId>/Art/icons/` for runtime loading
 
 ## Phase 1 – What’s Implemented
 

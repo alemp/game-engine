@@ -15,6 +15,9 @@ using GameEngine.Modules.Upgrades;
 using GameEngine.Modules.Prestige;
 using GameEngine.Modules.Quests;
 using GameEngine.Modules.Events;
+using GameEngine.Modules.RandomRewards;
+using GameEngine.Modules.Tiers;
+using GameEngine.Modules.Artifacts;
 using UnityEngine;
 
 namespace GameEngine.Game.Bootstrap
@@ -39,16 +42,23 @@ namespace GameEngine.Game.Bootstrap
         private UiSchema _uiConfig;
         private LocalizationService _localization;
         private IReadOnlyDictionary<string, string> _resourceDisplayKeys;
+        private IReadOnlyDictionary<string, string> _resourceIconPaths;
         private UpgradeModule _upgradeModule;
         private PrestigeModule _prestigeModule;
         private QuestModule _questModule;
         private EventModule _eventModule;
+        private RandomRewardModule _randomRewardModule;
+        private TierModule _tierModule;
+        private ArtifactModule _artifactModule;
 
         public IdleModule IdleModule => _idleModule;
+        public double TickIntervalSeconds => _scheduler?.TickIntervalSeconds ?? 1.0;
         public UpgradeModule UpgradeModule => _upgradeModule;
         public PrestigeModule PrestigeModule => _prestigeModule;
         public QuestModule QuestModule => _questModule;
         public EventModule EventModule => _eventModule;
+        public TierModule TierModule => _tierModule;
+        public ArtifactModule ArtifactModule => _artifactModule;
         public ThemeSchema Theme => _theme;
 
         /// <summary>
@@ -59,6 +69,16 @@ namespace GameEngine.Game.Bootstrap
             if (_prestigeModule == null)
                 return false;
             return _prestigeModule.TryPrestige(() => _scheduler?.Reset());
+        }
+
+        /// <summary>
+        /// Attempts to ascend to next tier. Resets resources, upgrades, scheduler on success.
+        /// </summary>
+        public bool TryAscendTier()
+        {
+            if (_tierModule == null)
+                return false;
+            return _tierModule.TryAscend(() => _scheduler?.Reset());
         }
 
         /// <summary>
@@ -87,6 +107,8 @@ namespace GameEngine.Game.Bootstrap
 
             _questModule?.SetCompletedQuests(null);
             _eventModule?.EndEvent();
+            _tierModule?.SetTierIndex(0);
+            _artifactModule?.SetCollectedIds(null);
             _scheduler?.Reset();
         }
 
@@ -94,6 +116,8 @@ namespace GameEngine.Game.Bootstrap
         public UiSchema UiConfig => _uiConfig;
         public LocalizationService Localization => _localization;
         public IReadOnlyDictionary<string, string> ResourceDisplayKeys => _resourceDisplayKeys;
+        public IReadOnlyDictionary<string, string> ResourceIconPaths => _resourceIconPaths;
+        public string GameId => _gameId;
 
         /// <summary>
         /// Fired when config is hot-reloaded (Editor only). UI should refresh.
@@ -115,6 +139,7 @@ namespace GameEngine.Game.Bootstrap
             _localization = new LocalizationService();
             _localization.Load(configPath, GetSystemLocale());
             _resourceDisplayKeys = _gameLoader.GetResourceDisplayKeys();
+            _resourceIconPaths = _gameLoader.GetResourceIconPaths();
             var validator = new ConfigValidator();
             var validation = validator.Validate(gameConfig);
             if (!validation.IsValid)
@@ -134,9 +159,9 @@ namespace GameEngine.Game.Bootstrap
                 foreach (var (id, amount) in _gameLoader.GetResourceDefinitions())
                     _idleModule.RegisterResource(id, amount);
 
-                foreach (var (id, inputs, outputId, outputAmount, multiplier) in _gameLoader.GetProductionRules())
+                foreach (var (id, inputs, outputId, outputAmount, multiplier, trigger) in _gameLoader.GetProductionRules())
                 {
-                    _idleModule.AddProductionRule(new ProductionRule(id, inputs, outputId, outputAmount, multiplier));
+                    _idleModule.AddProductionRule(new ProductionRule(id, inputs, outputId, outputAmount, multiplier, trigger));
                 }
 
                 _upgradeModule = new UpgradeModule(_idleModule);
@@ -149,10 +174,17 @@ namespace GameEngine.Game.Bootstrap
                 if (prestigeConfig != null)
                 {
                     _prestigeModule.Configure(prestigeConfig);
+                    _prestigeModule.SetPersistedResourceIds(_gameLoader.GetPersistedResourceIds());
+                    _prestigeModule.SetPersistedUpgradeIds(_gameLoader.GetPersistedUpgradeIds());
                     _idleModule.RegisterResourceIfNew(prestigeConfig.CurrencyResourceId, BigNumber.Zero);
                 }
 
-                _questModule = new QuestModule(_idleModule, _upgradeModule, _prestigeModule);
+                _artifactModule = new ArtifactModule(_idleModule);
+                var artifacts = _gameLoader.LoadArtifacts();
+                if (artifacts?.Artifacts != null)
+                    _artifactModule.RegisterArtifacts(artifacts.Artifacts);
+
+                _questModule = new QuestModule(_idleModule, _upgradeModule, _prestigeModule, _artifactModule);
                 var quests = _gameLoader.LoadQuests();
                 if (quests?.Quests != null)
                     _questModule.RegisterQuests(quests.Quests);
@@ -161,6 +193,20 @@ namespace GameEngine.Game.Bootstrap
                 var events = _gameLoader.LoadEvents();
                 if (events?.Events != null)
                     _eventModule.RegisterEvents(events.Events);
+
+                _randomRewardModule = new RandomRewardModule(_idleModule);
+                var randomRewards = _gameLoader.LoadRandomRewards();
+                if (randomRewards?.Rewards != null)
+                    _randomRewardModule.RegisterRewards(randomRewards.Rewards);
+
+                _tierModule = new TierModule(_idleModule, _upgradeModule);
+                var tiers = _gameLoader.LoadTiers();
+                if (tiers?.Tiers != null && tiers.Tiers.Count > 0)
+                {
+                    _tierModule.RegisterTiers(tiers.Tiers);
+                    _tierModule.SetPersistedResourceIds(_gameLoader.GetPersistedResourceIds());
+                    _tierModule.SetPersistedUpgradeIds(_gameLoader.GetPersistedUpgradeIds());
+                }
             }
             catch (Exception ex)
             {
@@ -182,8 +228,10 @@ namespace GameEngine.Game.Bootstrap
 
         private void Update()
         {
-            _scheduler?.Tick(Time.deltaTime);
-            _eventModule?.Tick(Time.deltaTime);
+            var dt = Time.deltaTime;
+            _scheduler?.Tick(dt);
+            _eventModule?.Tick(dt);
+            _randomRewardModule?.Tick(dt);
         }
 
         private void OnDestroy()
@@ -230,6 +278,12 @@ namespace GameEngine.Game.Bootstrap
 
             if (_questModule != null && saveData.CompletedQuests != null)
                 _questModule.SetCompletedQuests(saveData.CompletedQuests);
+
+            if (_tierModule != null)
+                _tierModule.SetTierIndex(saveData.CurrentTier);
+
+            if (_artifactModule != null && saveData.CollectedArtifacts != null)
+                _artifactModule.SetCollectedIds(saveData.CollectedArtifacts);
         }
 
         private void ApplyOfflineProgress(SaveDataSchema saveData)
@@ -266,6 +320,8 @@ namespace GameEngine.Game.Bootstrap
             var upgrades = _upgradeModule != null ? _upgradeModule.GetPurchasedLevels() : null;
             var prestige = _prestigeModule != null ? SaveSystem.ToSaveData(_prestigeModule.GetPrestigeCurrency()) : null;
             var completedQuests = _questModule != null ? new List<string>(_questModule.GetCompletedQuestIds()) : null;
+            var currentTier = _tierModule != null ? _tierModule.CurrentTierIndex : 0;
+            var collectedArtifacts = _artifactModule != null ? new List<string>(_artifactModule.GetCollectedIds()) : null;
 
             var saveData = new SaveDataSchema
             {
@@ -280,7 +336,9 @@ namespace GameEngine.Game.Bootstrap
                 Resources = resources,
                 Upgrades = upgrades != null ? new Dictionary<string, int>(upgrades) : null,
                 Prestige = prestige,
-                CompletedQuests = completedQuests
+                CompletedQuests = completedQuests,
+                CurrentTier = currentTier,
+                CollectedArtifacts = collectedArtifacts
             };
 
             try
@@ -337,14 +395,15 @@ namespace GameEngine.Game.Bootstrap
                 _uiConfig = _gameLoader.LoadUi();
                 _localization.Load(ResolveGameConfigPath(_gameId), GetSystemLocale());
                 _resourceDisplayKeys = _gameLoader.GetResourceDisplayKeys();
+                _resourceIconPaths = _gameLoader.GetResourceIconPaths();
 
                 foreach (var (id, amount) in _gameLoader.GetResourceDefinitions())
                     _idleModule.RegisterResourceIfNew(id, amount);
 
                 _idleModule.ClearProductionRules();
-                foreach (var (id, inputs, outputId, outputAmount, multiplier) in _gameLoader.GetProductionRules())
+                foreach (var (id, inputs, outputId, outputAmount, multiplier, trigger) in _gameLoader.GetProductionRules())
                 {
-                    _idleModule.AddProductionRule(new ProductionRule(id, inputs, outputId, outputAmount, multiplier));
+                    _idleModule.AddProductionRule(new ProductionRule(id, inputs, outputId, outputAmount, multiplier, trigger));
                 }
 
                 var upgrades = _gameLoader.LoadUpgrades();
@@ -358,6 +417,8 @@ namespace GameEngine.Game.Bootstrap
                 if (_prestigeModule != null && prestigeConfig != null)
                 {
                     _prestigeModule.Configure(prestigeConfig);
+                    _prestigeModule.SetPersistedResourceIds(_gameLoader.GetPersistedResourceIds());
+                    _prestigeModule.SetPersistedUpgradeIds(_gameLoader.GetPersistedUpgradeIds());
                     _idleModule.RegisterResourceIfNew(prestigeConfig.CurrencyResourceId, BigNumber.Zero);
                 }
 
@@ -368,6 +429,22 @@ namespace GameEngine.Game.Bootstrap
                 var events = _gameLoader.LoadEvents();
                 if (_eventModule != null && events?.Events != null)
                     _eventModule.RegisterEvents(events.Events);
+
+                var randomRewards = _gameLoader.LoadRandomRewards();
+                if (_randomRewardModule != null && randomRewards?.Rewards != null)
+                    _randomRewardModule.RegisterRewards(randomRewards.Rewards);
+
+                var tiers = _gameLoader.LoadTiers();
+                if (_tierModule != null && tiers?.Tiers != null && tiers.Tiers.Count > 0)
+                {
+                    _tierModule.RegisterTiers(tiers.Tiers);
+                    _tierModule.SetPersistedResourceIds(_gameLoader.GetPersistedResourceIds());
+                    _tierModule.SetPersistedUpgradeIds(_gameLoader.GetPersistedUpgradeIds());
+                }
+
+                var artifacts = _gameLoader.LoadArtifacts();
+                if (_artifactModule != null && artifacts?.Artifacts != null)
+                    _artifactModule.RegisterArtifacts(artifacts.Artifacts);
 
                 ConfigReloaded?.Invoke();
                 Debug.Log("[Config Hot Reload] Config reloaded successfully.");
@@ -402,6 +479,7 @@ namespace GameEngine.Game.Bootstrap
             _localization ??= new LocalizationService();
             _localization.Load(configPath, GetSystemLocale());
             _resourceDisplayKeys ??= new Dictionary<string, string> { ["gold"] = "resource.gold" };
+            _resourceIconPaths ??= new Dictionary<string, string>();
 
             _scheduler ??= new Scheduler(1.0);
             _idleModule ??= new IdleModule(_eventBus, _scheduler);

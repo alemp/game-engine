@@ -3,8 +3,13 @@
   "resource.souls": "Souls",
   "upgrade.gold_multiplier_1": "2× Gold Production",
   "upgrade.gold_multiplier_2": "1.5× Gold per level",
+  "tier.basic": "Basic",
+  "tier.advanced": "Advanced",
+  "artifact.speed": "Speed Boost (+10% production)",
   "nav.main": "Main",
   "nav.upgrades": "Upgrades",
   "hud.section.resources": "Resources",
-  "hud.section.upgrades": "Upgrades"
+  "hud.section.actions": "Actions",
+  "hud.section.upgrades": "Upgrades",
+  "hud.section.artifacts": "Artifacts"
 }

@@ -43,5 +43,11 @@ namespace GameEngine.Core.Config.Schemas
 
         [JsonProperty("rewardAmount")]
         public double RewardAmount { get; set; }
+
+        /// <summary>
+        /// Optional artifact to grant on claim. Collected via ArtifactModule.
+        /// </summary>
+        [JsonProperty("rewardArtifactId")]
+        public string RewardArtifactId { get; set; }
     }
 }

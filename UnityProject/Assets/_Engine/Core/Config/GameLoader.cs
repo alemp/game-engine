@@ -87,12 +87,57 @@ namespace GameEngine.Core.Config
         }
 
         /// <summary>
+        /// Returns resource id → icon path (relative to game folder, e.g. "Art/icons/gold").
+        /// </summary>
+        public IReadOnlyDictionary<string, string> GetResourceIconPaths()
+        {
+            var schema = LoadResources();
+            var dict = new Dictionary<string, string>();
+            foreach (var res in schema.Resources ?? new List<ResourceEntry>())
+            {
+                if (!string.IsNullOrEmpty(res.Id) && !string.IsNullOrEmpty(res.IconPath))
+                    dict[res.Id] = res.IconPath;
+            }
+            return dict;
+        }
+
+        /// <summary>
+        /// Returns resource IDs that persist across prestige (e.g. premium currency).
+        /// </summary>
+        public IReadOnlyList<string> GetPersistedResourceIds()
+        {
+            var schema = LoadResources();
+            var list = new List<string>();
+            foreach (var res in schema.Resources ?? new List<ResourceEntry>())
+            {
+                if (!string.IsNullOrEmpty(res.Id) && res.PersistsOnPrestige)
+                    list.Add(res.Id);
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// Returns upgrade IDs that persist across prestige (epic/permanent upgrades).
+        /// </summary>
+        public IReadOnlyList<string> GetPersistedUpgradeIds()
+        {
+            var schema = LoadUpgrades();
+            var list = new List<string>();
+            foreach (var upg in schema?.Upgrades ?? new List<UpgradeEntry>())
+            {
+                if (!string.IsNullOrEmpty(upg.Id) && upg.PersistsOnPrestige)
+                    list.Add(upg.Id);
+            }
+            return list;
+        }
+
+        /// <summary>
         /// Returns production rules for the bootstrap to add.
         /// </summary>
-        public IReadOnlyList<(string Id, IReadOnlyList<(string ResourceId, BigNumber Amount)> Inputs, string OutputId, BigNumber OutputAmount, double Multiplier)> GetProductionRules()
+        public IReadOnlyList<(string Id, IReadOnlyList<(string ResourceId, BigNumber Amount)> Inputs, string OutputId, BigNumber OutputAmount, double Multiplier, string Trigger)> GetProductionRules()
         {
             var schema = LoadProduction();
-            var list = new List<(string, IReadOnlyList<(string, BigNumber)>, string, BigNumber, double)>();
+            var list = new List<(string, IReadOnlyList<(string, BigNumber)>, string, BigNumber, double, string)>();
             foreach (var prod in schema.Productions ?? new List<ProductionEntry>())
             {
                 var inputs = new List<(string, BigNumber)>();
@@ -102,7 +147,8 @@ namespace GameEngine.Core.Config
                 }
                 var multiplier = prod.Multiplier > 0 ? prod.Multiplier : 1.0;
                 var id = !string.IsNullOrEmpty(prod.Id) ? prod.Id : prod.OutputId ?? "unknown";
-                list.Add((id, inputs, prod.OutputId, BigNumber.FromDouble(prod.OutputAmount), multiplier));
+                var trigger = !string.IsNullOrEmpty(prod.Trigger) && prod.Trigger.Equals("manual", StringComparison.OrdinalIgnoreCase) ? "manual" : "tick";
+                list.Add((id, inputs, prod.OutputId, BigNumber.FromDouble(prod.OutputAmount), multiplier, trigger));
             }
             return list;
         }
@@ -183,6 +229,45 @@ namespace GameEngine.Core.Config
 
             var json = File.ReadAllText(path);
             return JsonConvert.DeserializeObject<EventsSchema>(json);
+        }
+
+        /// <summary>
+        /// Loads random rewards from Content/random_rewards.json. Returns null if file does not exist.
+        /// </summary>
+        public RandomRewardsSchema LoadRandomRewards()
+        {
+            var path = Path.Combine(_basePath, "Content", "random_rewards.json");
+            if (!File.Exists(path))
+                return null;
+
+            var json = File.ReadAllText(path);
+            return JsonConvert.DeserializeObject<RandomRewardsSchema>(json);
+        }
+
+        /// <summary>
+        /// Loads tiers from Content/tiers.json. Returns null if file does not exist.
+        /// </summary>
+        public TiersSchema LoadTiers()
+        {
+            var path = Path.Combine(_basePath, "Content", "tiers.json");
+            if (!File.Exists(path))
+                return null;
+
+            var json = File.ReadAllText(path);
+            return JsonConvert.DeserializeObject<TiersSchema>(json);
+        }
+
+        /// <summary>
+        /// Loads artifacts from Content/artifacts.json. Returns null if file does not exist.
+        /// </summary>
+        public ArtifactsSchema LoadArtifacts()
+        {
+            var path = Path.Combine(_basePath, "Content", "artifacts.json");
+            if (!File.Exists(path))
+                return null;
+
+            var json = File.ReadAllText(path);
+            return JsonConvert.DeserializeObject<ArtifactsSchema>(json);
         }
     }
 }

@@ -1,0 +1,13 @@
+{
+  "rewards": [
+    {
+      "id": "drone",
+      "intervalSeconds": 120,
+      "jitterSeconds": 30,
+      "rewards": [
+        { "resourceId": "gold", "amount": 10, "weight": 70 },
+        { "resourceId": "souls", "amount": 1, "weight": 30 }
+      ]
+    }
+  ]
+}

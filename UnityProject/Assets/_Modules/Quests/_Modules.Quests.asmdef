@@ -1,7 +1,7 @@
 {
     "name": "GameEngine.Modules.Quests",
     "rootNamespace": "GameEngine.Modules.Quests",
-    "references": ["GameEngine.Core", "GameEngine.Modules.Idle", "GameEngine.Modules.Upgrades", "GameEngine.Modules.Prestige"],
+    "references": ["GameEngine.Core", "GameEngine.Modules.Idle", "GameEngine.Modules.Upgrades", "GameEngine.Modules.Prestige", "GameEngine.Modules.Artifacts"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

@@ -3,6 +3,7 @@
     {
       "id": "gold_multiplier_1",
       "displayKey": "upgrade.gold_multiplier_1",
+      "iconPath": "Art/icons/upgrade_gold_1",
       "targetProductionId": "gold_generator",
       "effectType": "multiplier",
       "effectValue": 1,
@@ -14,6 +15,7 @@
     {
       "id": "gold_multiplier_2",
       "displayKey": "upgrade.gold_multiplier_2",
+      "iconPath": "Art/icons/upgrade_gold_2",
       "targetProductionId": "gold_generator",
       "effectFormula": "exponential",
       "effectMultiplier": 1.5,
