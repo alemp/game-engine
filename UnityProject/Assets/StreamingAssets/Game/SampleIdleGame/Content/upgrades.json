@@ -1,30 +1,131 @@
 {
   "upgrades": [
     {
-      "id": "gold_multiplier_1",
-      "displayKey": "upgrade.gold_multiplier_1",
+      "id": "topic_context",
+      "displayKey": "topic.context",
       "iconPath": "Art/icons/upgrade_gold_1",
-      "targetProductionId": "gold_generator",
+      "targetProductionId": "conversation",
       "effectType": "multiplier",
-      "effectValue": 1,
-      "costResourceId": "gold",
-      "costAmount": 50,
+      "effectValue": 0.5,
+      "costResourceId": "tokens",
+      "costAmount": 1000,
+      "costPerLevel": 0,
+      "maxLevel": 1,
+      "unlockCondition": {"resourceId": "tokens", "minAmount": 1000}
+    },
+    {
+      "id": "topic_skills",
+      "displayKey": "topic.skills",
+      "iconPath": "Art/icons/upgrade_gold_1",
+      "targetProductionId": "conversation",
+      "effectValue": 0.5,
+      "costResourceId": "tokens",
+      "costAmount": 5000,
+      "costPerLevel": 0,
+      "maxLevel": 1,
+      "unlockCondition": {"resourceId": "tokens", "minAmount": 5000}
+    },
+    {
+      "id": "topic_soul",
+      "displayKey": "topic.soul",
+      "iconPath": "Art/icons/souls",
+      "targetProductionId": "conversation",
+      "effectValue": 0.5,
+      "costResourceId": "tokens",
+      "costAmount": 10000,
+      "costPerLevel": 0,
+      "maxLevel": 1,
+      "unlockCondition": {"resourceId": "tokens", "minAmount": 10000}
+    },
+    {
+      "id": "skill_clarity",
+      "displayKey": "skill.clarity",
+      "iconPath": "Art/icons/upgrade_gold_2",
+      "targetProductionId": "tap_tokens",
+      "effectValue": 0.05,
+      "costResourceId": "experience",
+      "costAmount": 1000,
+      "costPerLevel": 0,
+      "maxLevel": 1,
+      "unlockCondition": {"resourceId": "experience", "minAmount": 1000}
+    },
+    {
+      "id": "skill_specificity",
+      "displayKey": "skill.specificity",
+      "iconPath": "Art/icons/upgrade_gold_2",
+      "targetProductionId": "tap_tokens",
+      "effectValue": 0.1,
+      "costResourceId": "experience",
+      "costAmount": 3000,
+      "costPerLevel": 0,
+      "maxLevel": 1,
+      "unlockCondition": {"resourceId": "experience", "minAmount": 3000}
+    },
+    {
+      "id": "agent_assistant",
+      "displayKey": "agent.assistant",
+      "iconPath": "Art/icons/upgrade_gold_1",
+      "targetProductionId": "agent_assistant",
+      "effectValue": 9,
+      "costResourceId": "tokens",
+      "costAmount": 500,
       "costPerLevel": 0,
       "maxLevel": 1
     },
     {
-      "id": "gold_multiplier_2",
-      "displayKey": "upgrade.gold_multiplier_2",
-      "iconPath": "Art/icons/upgrade_gold_2",
-      "targetProductionId": "gold_generator",
-      "effectFormula": "exponential",
-      "effectMultiplier": 1.5,
-      "costFormula": "exponential",
-      "costAmount": 100,
-      "costMultiplier": 2,
-      "costResourceId": "gold",
+      "id": "agent_reviewer",
+      "displayKey": "agent.reviewer",
+      "iconPath": "Art/icons/upgrade_gold_1",
+      "targetProductionId": "agent_reviewer",
+      "effectValue": 9,
+      "costResourceId": "tokens",
+      "costAmount": 2000,
       "costPerLevel": 0,
-      "maxLevel": 5
+      "maxLevel": 1
+    },
+    {
+      "id": "agent_documenter",
+      "displayKey": "agent.documenter",
+      "iconPath": "Art/icons/upgrade_gold_1",
+      "targetProductionId": "agent_documenter",
+      "effectValue": 9,
+      "costResourceId": "tokens",
+      "costAmount": 5000,
+      "costPerLevel": 0,
+      "maxLevel": 1
+    },
+    {
+      "id": "agent_debugger",
+      "displayKey": "agent.debugger",
+      "iconPath": "Art/icons/upgrade_gold_1",
+      "targetProductionId": "agent_debugger",
+      "effectValue": 9,
+      "costResourceId": "tokens",
+      "costAmount": 12000,
+      "costPerLevel": 0,
+      "maxLevel": 1
+    },
+    {
+      "id": "agent_architect",
+      "displayKey": "agent.architect",
+      "iconPath": "Art/icons/upgrade_gold_2",
+      "targetProductionId": "agent_architect",
+      "effectValue": 9,
+      "costResourceId": "tokens",
+      "costAmount": 30000,
+      "costPerLevel": 0,
+      "maxLevel": 1
+    },
+    {
+      "id": "agent_autonomous",
+      "displayKey": "agent.autonomous",
+      "iconPath": "Art/icons/upgrade_gold_2",
+      "targetProductionId": "agent_autonomous",
+      "effectValue": 9,
+      "costResourceId": "tokens",
+      "costAmount": 100000,
+      "costPerLevel": 0,
+      "maxLevel": 1
     }
   ]
 }

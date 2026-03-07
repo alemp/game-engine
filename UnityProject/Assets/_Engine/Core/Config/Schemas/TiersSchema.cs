@@ -37,5 +37,12 @@ namespace GameEngine.Core.Config.Schemas
         /// </summary>
         [JsonProperty("unlockMinAmount")]
         public double UnlockMinAmount { get; set; }
+
+        /// <summary>
+        /// Optional. Number of additional slots granted in this tier (e.g. for agents, buildings).
+        /// Usage is game-defined. Default 0 when omitted.
+        /// </summary>
+        [JsonProperty("additionalSlots")]
+        public int AdditionalSlots { get; set; }
     }
 }

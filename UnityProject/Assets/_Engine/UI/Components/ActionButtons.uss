@@ -24,10 +24,19 @@
 .hud-action-button--primary {
     background-color: var(--color-accent, rgb(255, 215, 0));
     color: rgb(30, 30, 30);
+    -unity-font-style: bold;
 }
 
-.hud-action-button--primary:hover:not(:disabled) {
+.hud-action-button--primary:hover {
     background-color: rgba(255, 215, 0, 0.9);
+}
+
+.hud-action-button--secondary {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.hud-action-button--secondary:hover {
+    background-color: rgba(255, 255, 255, 0.14);
 }
 
 .artifact-badge {

@@ -1,7 +1,15 @@
 {
-  "resources": {"order": ["gold", "souls"]},
-  "upgrades": {"visible": true, "order": ["gold_multiplier_1", "gold_multiplier_2"]},
-  "quests": {"visible": true, "order": ["reach_100_gold", "buy_first_upgrade"]},
+  "resources": {
+    "order": ["tokens", "experience", "souls"]
+  },
+  "upgrades": {
+    "visible": true,
+    "order": ["topic_context", "topic_skills", "topic_soul", "skill_clarity", "skill_specificity", "agent_assistant", "agent_reviewer", "agent_documenter", "agent_debugger", "agent_architect", "agent_autonomous"]
+  },
+  "quests": {
+    "visible": true,
+    "order": ["reach_100_tokens", "unlock_context", "buy_first_agent", "first_career_up"]
+  },
   "layout": "wrap",
   "sectionOrder": ["resources", "actions", "upgrades", "artifacts", "quests"],
   "sectionLabels": {

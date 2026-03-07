@@ -4,36 +4,54 @@
     <Style src="../../../_Engine/UI/Components/QuestRow.uss" />
     <Style src="../../../_Engine/UI/Components/HudSections.uss" />
     <Style src="../../../_Engine/UI/Components/ActionButtons.uss" />
-    <ui:VisualElement name="hud-root" style="flex-grow: 1; width: 100%; padding: 20px; flex-direction: column;">
-        <ui:VisualElement name="section-resources" class="hud-section">
-            <ui:Label name="section-resources-header" class="hud-section__header" text="Resources" />
-            <ui:VisualElement name="resource-container" class="hud-section__content hud-section__content--card">
-                <!-- ResourceDisplay elements added dynamically from config -->
+    <Style src="../../../_Engine/UI/Components/Tabs.uss" />
+    <ui:VisualElement name="hud-root" class="hud-root">
+        <ui:VisualElement name="resources-bar" class="resources-bar">
+            <ui:Label name="section-resources-header" class="resources-bar__header" text="Resources" />
+            <ui:VisualElement name="resource-container" class="resources-bar__content">
+                <!-- ResourceDisplay elements added dynamically -->
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="section-actions" class="hud-section">
-            <ui:Label name="section-actions-header" class="hud-section__header" text="Actions" />
-            <ui:VisualElement name="actions-container" class="hud-section__content">
-                <!-- Tap, Prestige, Ascend buttons added dynamically -->
+        <ui:VisualElement name="tabs-container" class="tabs">
+            <ui:VisualElement name="tabs-bar" class="tabs__bar">
+                <ui:Button name="tab-main" class="tabs__tab tabs__tab--active" text="Main" />
+                <ui:Button name="tab-upgrades" class="tabs__tab" text="Upgrades" />
+                <ui:Button name="tab-progress" class="tabs__tab" text="Progress" />
             </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement name="section-upgrades" class="hud-section">
-            <ui:Label name="section-upgrades-header" class="hud-section__header" text="Upgrades" />
-            <ui:VisualElement name="upgrades-container" class="hud-section__content hud-section__content--card">
-                <!-- UpgradeButton elements added dynamically from config -->
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement name="section-artifacts" class="hud-section">
-            <ui:Label name="section-artifacts-header" class="hud-section__header" text="Artifacts" />
-            <ui:VisualElement name="artifacts-container" class="hud-section__content hud-section__content--card">
-                <!-- ArtifactDisplay elements added dynamically -->
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement name="section-quests" class="hud-section">
-            <ui:Label name="section-quests-header" class="hud-section__header" text="Quests" />
-            <ui:VisualElement name="quests-container" class="hud-section__content hud-section__content--card">
-                <!-- QuestRow elements added dynamically -->
-            </ui:VisualElement>
+            <ui:ScrollView name="tabs-content" class="tabs__content">
+                <ui:VisualElement name="tabs-panels" style="flex-direction: column;">
+                    <ui:VisualElement name="panel-main" class="tabs__panel">
+                        <ui:VisualElement name="section-actions" class="hud-section">
+                            <ui:Label name="section-actions-header" class="hud-section__header" text="Actions" />
+                            <ui:VisualElement name="actions-container" class="hud-section__content">
+                                <!-- Tap, Prestige, Ascend buttons -->
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="panel-upgrades" class="tabs__panel tabs__panel--hidden">
+                        <ui:VisualElement name="section-upgrades" class="hud-section">
+                            <ui:Label name="section-upgrades-header" class="hud-section__header" text="Upgrades" />
+                            <ui:VisualElement name="upgrades-container" class="hud-section__content hud-section__content--card">
+                                <!-- UpgradeButton elements -->
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="panel-progress" class="tabs__panel tabs__panel--hidden">
+                        <ui:VisualElement name="section-artifacts" class="hud-section">
+                            <ui:Label name="section-artifacts-header" class="hud-section__header" text="Artifacts" />
+                            <ui:VisualElement name="artifacts-container" class="hud-section__content hud-section__content--card">
+                                <!-- ArtifactDisplay elements -->
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="section-quests" class="hud-section">
+                            <ui:Label name="section-quests-header" class="hud-section__header" text="Quests" />
+                            <ui:VisualElement name="quests-container" class="hud-section__content hud-section__content--card">
+                                <!-- QuestRow elements -->
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:ScrollView>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

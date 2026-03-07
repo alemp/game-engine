@@ -1,1 +1,8 @@
-{"gameId":"SampleIdleGame","activeModules":["Idle","Upgrades"],"economy":{"tickIntervalSeconds":1,"maxOfflineSeconds":86400}}
+{
+  "gameId": "SampleIdleGame",
+  "activeModules": ["Idle", "Upgrades", "Tiers", "Quests", "Prestige", "Artifacts", "Events", "RandomRewards"],
+  "economy": {
+    "tickIntervalSeconds": 1.0,
+    "maxOfflineSeconds": 86400
+  }
+}

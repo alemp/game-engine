@@ -25,7 +25,7 @@ namespace GameEngine.Game.Editor
             }
 
             bootstrap.ResetProgress();
-            Debug.Log("[Reset Progress] Resources, upgrades, prestige, quests, and scheduler reset.");
+            Debug.Log("[Reset Progress] All progress reset: resources, upgrades, prestige, tier, artifacts, quests, events, multipliers. Save file deleted.");
         }
     }
 }

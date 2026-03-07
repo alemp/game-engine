@@ -97,11 +97,10 @@ Ao subir de carreira (prestige):
 
 ### 4.4 Integração com o Engine
 
-O sistema de carreira usa o **TierModule** genérico, configurado via extensão de `tiers.json`:
+O sistema de carreira usa o **TierModule** genérico, configurado via `tiers.json`:
 
-- **TierModule:** cada carreira = um tier; `productionMultiplier` = bônus de prestige.
-- **PrestigeModule:** lógica de reset.
-- **Schema:** extensão de `tiers.json` (sem arquivo separado). Campos opcionais como `additionalSlots` podem ser adicionados ao schema genérico para jogos que precisem.
+- **TierModule:** cada carreira = um tier; `productionMultiplier` = bônus; `TryAscend()` faz o reset.
+- **Schema:** `tiers.json` com `additionalSlots` (opcional) para limitar agentes por tier. O jogo lê `GetCurrentTier().AdditionalSlots` e aplica a restrição na compra de agentes.
 
 ---
 
@@ -178,22 +177,25 @@ Skills desbloqueadas com experiência, que aumentam a geração de tokens (Clare
 
 ## 7. Mapeamento para o Engine
 
-| Conceito AI Idle | Módulo Engine |
-|------------------|---------------|
-| Tokens | Resource (gold-like) |
-| Experiência | Resource secundária (ou Quest progress) |
-| Tópicos | Upgrades ou Quest unlocks |
-| Agentes | Productions + Upgrades |
-| Skills | Upgrades (multiplicadores), custo em XP |
-| Carreira (Prestige) | TierModule + PrestigeModule |
-| Nível de carreira | Tier level |
-| Bônus de carreira | Tier productionMultiplier + slots |
+| Conceito AI Idle | Módulo / Config |
+|------------------|-----------------|
+| Tokens | Resource em `resources.json` |
+| Experiência | Resource em `resources.json` |
+| Consumir tokens → ganhar XP | Production com `inputs: [{resourceId: "tokens"}]`, `outputId: "experience"`, `trigger: "manual"` |
+| Clique para gerar tokens | Production com `trigger: "manual"` |
+| Tópicos | Upgrades com `unlockCondition` (tokens) que multiplicam a production de conversa |
+| Skills | Upgrades com `costResourceId: "experience"` |
+| Agentes | Productions (tick) + Upgrades para comprar |
+| Carreira (subir de nível) | TierModule, `tiers.json` |
+| Reset ao subir de carreira | `TierModule.TryAscend()` |
+| Bônus por tier | `productionMultiplier` em TierEntry |
+| Slots de agentes | `additionalSlots` em TierEntry; jogo aplica `agentesComprados < GetCurrentTier().AdditionalSlots` |
 
 ---
 
-## 8. Configuração: extensão de `tiers.json`
+## 8. Configuração: `tiers.json`
 
-O AI Idle usa o schema genérico `tiers.json` (TierModule). Cada carreira é um tier. Campos opcionais como `additionalSlots` podem ser adicionados ao `TierEntry` no engine para jogos que precisem limitar slots por tier.
+O AI Idle usa o schema genérico `tiers.json` (TierModule). Cada carreira é um tier. O campo `additionalSlots` está disponível no schema do engine para jogos que precisem limitar slots por tier.
 
 **Exemplo `tiers.json` para AI Idle:**
 
@@ -217,8 +219,8 @@ O AI Idle usa o schema genérico `tiers.json` (TierModule). Cada carreira é um 
       "additionalSlots": 2
     },
     {
-      "id": "pleno_1",
-      "displayKey": "career.pleno_1",
+      "id": "mid_1",
+      "displayKey": "career.mid_1",
       "productionMultiplier": 2.0,
       "unlockResourceId": "tokens",
       "unlockMinAmount": 200000,
@@ -228,8 +230,7 @@ O AI Idle usa o schema genérico `tiers.json` (TierModule). Cada carreira é um 
 }
 ```
 
-- Campos base: `id`, `displayKey`, `productionMultiplier`, `unlockResourceId`, `unlockMinAmount` (ver [IDLE_V2_FEATURES.md](IDLE_V2_FEATURES.md) §5).
-- Campo opcional: `additionalSlots` — quantidade de slots adicionais concedidos por tier (uso definido pelo jogo).
+- Campos: ver [IDLE_V2_FEATURES.md](IDLE_V2_FEATURES.md) §5. `additionalSlots` é opcional; o jogo usa para limitar compra de agentes.
 
 ---
 

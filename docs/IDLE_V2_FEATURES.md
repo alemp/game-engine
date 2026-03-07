@@ -170,6 +170,7 @@ Multiple progression tiers: reach a threshold to ascend to the next tier. Higher
 
 - **`productionMultiplier`**: Multiplier applied to all productions when in this tier.
 - **`unlockResourceId`** / **`unlockMinAmount`**: Condition to ascend from previous tier. First tier has null/0.
+- **`additionalSlots`** (optional): Number of additional slots granted in this tier. Usage is game-defined (e.g. limit agents, buildings). Default 0 when omitted. Game logic reads `TierModule.GetCurrentTier().AdditionalSlots` to enforce limits.
 
 ### 5.2 Behavior
 

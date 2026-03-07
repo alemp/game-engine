@@ -1,0 +1,88 @@
+/* Tab bar and tab content */
+
+.tabs {
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.tabs__bar {
+    flex-direction: row;
+    flex-shrink: 0;
+    padding: 0 4px 12px 4px;
+    border-bottom-width: 1px;
+    border-bottom-color: var(--color-card-border, rgb(58, 58, 69));
+}
+
+.tabs__tab {
+    padding: 12px 20px;
+    margin-right: 4px;
+    font-size: 15px;
+    -unity-font-style: normal;
+    color: var(--color-text-secondary, rgb(180, 180, 180));
+    background-color: transparent;
+    border-radius: var(--radius-button, 8px);
+    border-width: 0;
+}
+
+.tabs__tab:hover {
+    color: var(--color-text, rgb(255, 255, 255));
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.tabs__tab--active {
+    color: var(--color-accent, rgb(255, 215, 0));
+    -unity-font-style: bold;
+    background-color: rgba(255, 215, 0, 0.12);
+}
+
+.tabs__content {
+    flex-grow: 1;
+    flex-direction: column;
+    width: 100%;
+    min-height: 200px;
+    padding-top: 16px;
+}
+
+/* Scrollbar styling - subtle, minimal */
+.tabs__content .unity-scroller__low-button,
+.tabs__content .unity-scroller__high-button {
+    height: 0;
+    width: 0;
+    min-height: 0;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.tabs__content .unity-scroller--vertical {
+    width: 8px;
+}
+
+.tabs__content .unity-scroller--vertical .unity-base-slider__dragger {
+    width: 6px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.tabs__content .unity-scroller--vertical .unity-base-slider__dragger:hover {
+    background-color: rgba(255, 255, 255, 0.35);
+}
+
+.tabs__content .unity-scroller--vertical .unity-base-slider__tracker {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tabs__content .unity-scroller--horizontal {
+    display: none;
+}
+
+.tabs__panel {
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.tabs__panel--hidden {
+    display: none;
+}

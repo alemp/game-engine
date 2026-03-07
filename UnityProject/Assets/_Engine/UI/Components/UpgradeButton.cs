@@ -11,6 +11,9 @@ namespace GameEngine.UI.Components
     public partial class UpgradeButton : VisualElement
     {
         public static readonly string UssClassName = "upgrade-button";
+        public static readonly string ContentUssClassName = "upgrade-button__content";
+        public static readonly string TopRowUssClassName = "upgrade-button__top";
+        public static readonly string BottomRowUssClassName = "upgrade-button__bottom";
         public static readonly string IconUssClassName = "upgrade-button__icon";
         public static readonly string LabelUssClassName = "upgrade-button__label";
         public static readonly string CostUssClassName = "upgrade-button__cost";
@@ -31,21 +34,36 @@ namespace GameEngine.UI.Components
         {
             AddToClassList(UssClassName);
 
+            var content = new VisualElement();
+            content.AddToClassList(ContentUssClassName);
+
+            var topRow = new VisualElement();
+            topRow.AddToClassList(TopRowUssClassName);
+
             _icon = new VisualElement();
             _icon.AddToClassList(IconUssClassName);
-            Add(_icon);
+            topRow.Add(_icon);
 
             _label = new Label { text = "—" };
             _label.AddToClassList(LabelUssClassName);
-            Add(_label);
+            topRow.Add(_label);
+
+            content.Add(topRow);
+
+            var bottomRow = new VisualElement();
+            bottomRow.AddToClassList(BottomRowUssClassName);
 
             _costLabel = new Label { text = "—" };
             _costLabel.AddToClassList(CostUssClassName);
-            Add(_costLabel);
+            bottomRow.Add(_costLabel);
 
             _levelLabel = new Label { text = "0/1" };
             _levelLabel.AddToClassList(LevelUssClassName);
-            Add(_levelLabel);
+            bottomRow.Add(_levelLabel);
+
+            content.Add(bottomRow);
+
+            Add(content);
 
             _buyButton = new Button { text = "Buy" };
             _buyButton.AddToClassList(BuyUssClassName);

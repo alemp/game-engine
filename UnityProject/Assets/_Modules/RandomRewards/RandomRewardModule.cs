@@ -22,6 +22,14 @@ namespace GameEngine.Modules.RandomRewards
             _idleModule = idleModule ?? throw new ArgumentNullException(nameof(idleModule));
         }
 
+        /// <summary>
+        /// Resets accumulated timers for all rewards. Call when resetting game progress.
+        /// </summary>
+        public void Reset()
+        {
+            _accumulatedTime.Clear();
+        }
+
         public void RegisterRewards(IReadOnlyList<RandomRewardEntry> entries)
         {
             if (entries == null)

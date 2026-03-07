@@ -1,1 +1,12 @@
-{"productions":[{"id":"gold_generator","inputs":[],"outputId":"gold","outputAmount":1,"multiplier":2,"trigger":"tick"},{"id":"tap_action","inputs":[],"outputId":"gold","outputAmount":0.5,"trigger":"manual"}]}
+{
+  "productions": [
+    {"id": "tap_tokens", "inputs": [], "outputId": "tokens", "outputAmount": 0.5, "trigger": "manual"},
+    {"id": "conversation", "inputs": [{"resourceId": "tokens", "amount": 1}], "outputId": "experience", "outputAmount": 0.5, "trigger": "manual"},
+    {"id": "agent_assistant", "inputs": [], "outputId": "tokens", "outputAmount": 0.01, "trigger": "tick"},
+    {"id": "agent_reviewer", "inputs": [], "outputId": "tokens", "outputAmount": 0.02, "trigger": "tick"},
+    {"id": "agent_documenter", "inputs": [], "outputId": "tokens", "outputAmount": 0.05, "trigger": "tick"},
+    {"id": "agent_debugger", "inputs": [], "outputId": "tokens", "outputAmount": 0.1, "trigger": "tick"},
+    {"id": "agent_architect", "inputs": [], "outputId": "tokens", "outputAmount": 0.25, "trigger": "tick"},
+    {"id": "agent_autonomous", "inputs": [], "outputId": "tokens", "outputAmount": 0.5, "trigger": "tick"}
+  ]
+}

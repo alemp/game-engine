@@ -1,6 +1,7 @@
 {
   "resources": [
-    {"id": "gold", "displayKey": "resource.gold", "initialAmount": 1, "iconPath": "Art/icons/gold"},
-    {"id": "souls", "displayKey": "resource.souls", "initialAmount": 0, "iconPath": "Art/icons/souls"}
+    {"id": "tokens", "displayKey": "resource.tokens", "initialAmount": 1, "iconPath": "Art/icons/gold"},
+    {"id": "experience", "displayKey": "resource.experience", "initialAmount": 0, "iconPath": "Art/icons/souls"},
+    {"id": "souls", "displayKey": "resource.souls", "initialAmount": 0, "iconPath": "Art/icons/souls", "persistsOnPrestige": true}
   ]
 }

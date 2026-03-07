@@ -1,10 +1,45 @@
-/* HUD section headers and card layout - Phase A (mobile-optimized) */
+/* HUD layout - tabbed, mobile-optimized */
+
+.hud-root {
+    flex-grow: 1;
+    width: 100%;
+    padding: 16px;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.resources-bar {
+    flex-shrink: 0;
+    flex-direction: column;
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    background-color: var(--color-card-bg, rgb(37, 37, 48));
+    border-radius: var(--radius-card, 12px);
+    border-width: 1px;
+    border-color: var(--color-card-border, rgb(58, 58, 69));
+}
+
+.resources-bar__header {
+    font-size: 12px;
+    -unity-font-style: bold;
+    color: var(--color-text-secondary, rgb(180, 180, 180));
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.resources-bar__content {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+}
 
 .hud-section {
     flex-direction: column;
     flex-grow: 0;
     width: 100%;
-    margin-bottom: var(--spacing-lg, 24px);
+    margin-bottom: var(--spacing-lg, 20px);
 }
 
 .hud-section__header {
@@ -23,8 +58,7 @@
 }
 
 .hud-section__content--card {
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction: column;
     align-items: stretch;
     width: 100%;
 }
@@ -63,12 +97,68 @@
 }
 
 .upgrade-button--card {
-    min-height: 48px;
+    flex-direction: row;
+    align-items: center;
+    min-height: 56px;
+    width: 100%;
     background-color: var(--color-card-bg, rgb(37, 37, 48));
     border-radius: var(--radius-card, 12px);
     border-width: 1px;
     border-color: var(--color-card-border, rgb(58, 58, 69));
-    padding: 12px 18px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+}
+
+.upgrade-button--card:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.upgrade-button--card .upgrade-button__content {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.upgrade-button--card .upgrade-button__top {
+    margin-bottom: 8px;
+}
+
+.upgrade-button--card .upgrade-button__icon {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+}
+
+.upgrade-button--card .upgrade-button__label {
+    flex-grow: 1;
+    min-width: 0;
+    font-size: 15px;
+}
+
+.upgrade-button--card .upgrade-button__bottom {
+    padding-left: 40px;
+    margin-top: 0;
+    margin-right: 0;
+}
+
+.upgrade-button--card .upgrade-button__cost {
+    min-width: 0;
+    font-size: 14px;
     margin-right: var(--spacing-sm, 8px);
-    margin-bottom: var(--spacing-sm, 8px);
+}
+
+.upgrade-button--card .upgrade-button__level {
+    min-width: 0;
+    font-size: 13px;
+    margin-right: var(--spacing-sm, 8px);
+}
+
+.upgrade-button--card .upgrade-button__buy {
+    flex-shrink: 0;
+    margin-left: 12px;
+    padding: 8px 16px;
+    min-height: 36px;
+    background-color: var(--color-accent, rgb(255, 215, 0));
+    color: rgb(30, 30, 30);
+    -unity-font-style: bold;
 }

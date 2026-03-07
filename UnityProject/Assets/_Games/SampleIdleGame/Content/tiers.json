@@ -1,18 +1,14 @@
 {
   "tiers": [
-    {
-      "id": "tier_1",
-      "displayKey": "tier.basic",
-      "productionMultiplier": 1.0,
-      "unlockResourceId": null,
-      "unlockMinAmount": 0
-    },
-    {
-      "id": "tier_2",
-      "displayKey": "tier.advanced",
-      "productionMultiplier": 10.0,
-      "unlockResourceId": "gold",
-      "unlockMinAmount": 1000
-    }
+    {"id": "junior_1", "displayKey": "career.junior_1", "productionMultiplier": 1.0, "unlockResourceId": null, "unlockMinAmount": 0, "additionalSlots": 2},
+    {"id": "junior_2", "displayKey": "career.junior_2", "productionMultiplier": 1.25, "unlockResourceId": "tokens", "unlockMinAmount": 10000, "additionalSlots": 2},
+    {"id": "junior_3", "displayKey": "career.junior_3", "productionMultiplier": 1.5, "unlockResourceId": "tokens", "unlockMinAmount": 50000, "additionalSlots": 2},
+    {"id": "mid_1", "displayKey": "career.mid_1", "productionMultiplier": 2.0, "unlockResourceId": "tokens", "unlockMinAmount": 200000, "additionalSlots": 4},
+    {"id": "mid_2", "displayKey": "career.mid_2", "productionMultiplier": 2.5, "unlockResourceId": "tokens", "unlockMinAmount": 1000000, "additionalSlots": 4},
+    {"id": "mid_3", "displayKey": "career.mid_3", "productionMultiplier": 3.0, "unlockResourceId": "tokens", "unlockMinAmount": 5000000, "additionalSlots": 4},
+    {"id": "senior_1", "displayKey": "career.senior_1", "productionMultiplier": 4.0, "unlockResourceId": "tokens", "unlockMinAmount": 25000000, "additionalSlots": 6},
+    {"id": "senior_2", "displayKey": "career.senior_2", "productionMultiplier": 5.0, "unlockResourceId": "tokens", "unlockMinAmount": 100000000, "additionalSlots": 6},
+    {"id": "senior_3", "displayKey": "career.senior_3", "productionMultiplier": 6.0, "unlockResourceId": "tokens", "unlockMinAmount": 500000000, "additionalSlots": 6},
+    {"id": "architect", "displayKey": "career.architect", "productionMultiplier": 8.5, "unlockResourceId": "tokens", "unlockMinAmount": 2000000000, "additionalSlots": 8}
   ]
 }

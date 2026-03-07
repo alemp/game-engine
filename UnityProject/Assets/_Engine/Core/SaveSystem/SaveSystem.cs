@@ -61,6 +61,19 @@ namespace GameEngine.Core.SaveSystem
             return File.Exists(GetSavePath(gameId));
         }
 
+        /// <summary>
+        /// Deletes the save file for the given game. Used when resetting progress.
+        /// </summary>
+        public void DeleteSave(string gameId)
+        {
+            if (string.IsNullOrEmpty(gameId))
+                return;
+
+            var path = GetSavePath(gameId);
+            if (File.Exists(path))
+                File.Delete(path);
+        }
+
         private string GetSaveDirectory(string gameId)
         {
             return Path.Combine(_basePath, "Game", gameId);

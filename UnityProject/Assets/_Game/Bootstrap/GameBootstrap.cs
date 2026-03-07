@@ -82,8 +82,8 @@ namespace GameEngine.Game.Bootstrap
         }
 
         /// <summary>
-        /// Resets resources, upgrades, prestige, quests, and scheduler to initial state.
-        /// Editor-only shortcut for testing.
+        /// Resets all progress: resources, upgrades, prestige, tier, artifacts, quests, events, scheduler.
+        /// Deletes the save file so progress does not persist. Editor shortcut: Tools → Engine → Reset Progress.
         /// </summary>
         public void ResetProgress()
         {
@@ -109,7 +109,10 @@ namespace GameEngine.Game.Bootstrap
             _eventModule?.EndEvent();
             _tierModule?.SetTierIndex(0);
             _artifactModule?.SetCollectedIds(null);
+            _randomRewardModule?.Reset();
             _scheduler?.Reset();
+
+            _saveSystem?.DeleteSave(_gameId);
         }
 
         public HudSchema HudConfig => _hudConfig;

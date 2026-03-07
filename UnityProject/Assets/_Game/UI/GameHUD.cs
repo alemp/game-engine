@@ -30,11 +30,18 @@ namespace GameEngine.Game.UI
         private VisualElement _actionsContainer;
         private VisualElement _artifactsContainer;
         private VisualElement _questsContainer;
+        private VisualElement _resourcesBar;
         private VisualElement _sectionResources;
         private VisualElement _sectionUpgrades;
         private VisualElement _sectionActions;
         private VisualElement _sectionArtifacts;
         private VisualElement _sectionQuests;
+        private VisualElement _panelMain;
+        private VisualElement _panelUpgrades;
+        private VisualElement _panelProgress;
+        private Button _tabMain;
+        private Button _tabUpgrades;
+        private Button _tabProgress;
         private bool _resourcesBound;
         private bool _upgradesBound;
         private bool _actionsBound;
@@ -76,21 +83,33 @@ namespace GameEngine.Game.UI
 
             _root = root;
             _hudRoot = _root.Q<VisualElement>("hud-root") ?? _root;
+            _resourcesBar = _root.Q<VisualElement>("resources-bar");
             _resourceContainer = _root.Q<VisualElement>("resource-container");
             _upgradesContainer = _root.Q<VisualElement>("upgrades-container");
             _actionsContainer = _root.Q<VisualElement>("actions-container");
             _artifactsContainer = _root.Q<VisualElement>("artifacts-container");
             _questsContainer = _root.Q<VisualElement>("quests-container");
-            _sectionResources = _root.Q<VisualElement>("section-resources");
+            _sectionResources = _resourcesBar;
             _sectionUpgrades = _root.Q<VisualElement>("section-upgrades");
             _sectionActions = _root.Q<VisualElement>("section-actions");
             _sectionArtifacts = _root.Q<VisualElement>("section-artifacts");
             _sectionQuests = _root.Q<VisualElement>("section-quests");
+            _panelMain = _root.Q<VisualElement>("panel-main");
+            _panelUpgrades = _root.Q<VisualElement>("panel-upgrades");
+            _panelProgress = _root.Q<VisualElement>("panel-progress");
+            _tabMain = _root.Q<Button>("tab-main");
+            _tabUpgrades = _root.Q<Button>("tab-upgrades");
+            _tabProgress = _root.Q<Button>("tab-progress");
 
             if (_bootstrap.Theme != null)
                 ThemeApplier.Apply(_root, _bootstrap.Theme);
 
+            var tabsContent = _root.Q<ScrollView>("tabs-content");
+            if (tabsContent != null)
+                tabsContent.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
+
             ApplyHudLayout();
+            BindTabs();
             BindResourceDisplays();
             BindActionButtons();
             BindUpgradeButtons();
@@ -126,21 +145,33 @@ namespace GameEngine.Game.UI
                 return;
 
             _hudRoot = _root.Q<VisualElement>("hud-root") ?? _root;
+            _resourcesBar = _root.Q<VisualElement>("resources-bar");
             _resourceContainer = _root.Q<VisualElement>("resource-container");
             _upgradesContainer = _root.Q<VisualElement>("upgrades-container");
             _actionsContainer = _root.Q<VisualElement>("actions-container");
             _artifactsContainer = _root.Q<VisualElement>("artifacts-container");
             _questsContainer = _root.Q<VisualElement>("quests-container");
-            _sectionResources = _root.Q<VisualElement>("section-resources");
+            _sectionResources = _resourcesBar;
             _sectionUpgrades = _root.Q<VisualElement>("section-upgrades");
             _sectionActions = _root.Q<VisualElement>("section-actions");
             _sectionArtifacts = _root.Q<VisualElement>("section-artifacts");
             _sectionQuests = _root.Q<VisualElement>("section-quests");
+            _panelMain = _root.Q<VisualElement>("panel-main");
+            _panelUpgrades = _root.Q<VisualElement>("panel-upgrades");
+            _panelProgress = _root.Q<VisualElement>("panel-progress");
+            _tabMain = _root.Q<Button>("tab-main");
+            _tabUpgrades = _root.Q<Button>("tab-upgrades");
+            _tabProgress = _root.Q<Button>("tab-progress");
 
             if (_bootstrap.Theme != null)
                 ThemeApplier.Apply(_root, _bootstrap.Theme);
 
+            var tabsContent = _root.Q<ScrollView>("tabs-content");
+            if (tabsContent != null)
+                tabsContent.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
+
             ApplyHudLayout();
+            BindTabs();
             BindResourceDisplays();
             BindActionButtons();
             BindUpgradeButtons();
@@ -196,7 +227,60 @@ namespace GameEngine.Game.UI
                 _sectionQuests.style.display = (hud?.Quests?.Visible ?? true) ? DisplayStyle.Flex : DisplayStyle.None;
 
             ApplySectionHeaders();
-            ApplySectionOrder();
+        }
+
+        private void BindTabs()
+        {
+            if (_tabMain != null)
+            {
+                _tabMain.text = _bootstrap?.Localization?.GetString("tab.main") ?? "Main";
+                _tabMain.clicked += () => ShowTab("main");
+            }
+            if (_tabUpgrades != null)
+            {
+                _tabUpgrades.text = _bootstrap?.Localization?.GetString("tab.upgrades") ?? "Upgrades";
+                _tabUpgrades.clicked += () => ShowTab("upgrades");
+            }
+            if (_tabProgress != null)
+            {
+                _tabProgress.text = _bootstrap?.Localization?.GetString("tab.progress") ?? "Progress";
+                _tabProgress.clicked += () => ShowTab("progress");
+            }
+        }
+
+        private void ShowTab(string tabId)
+        {
+            if (_panelMain != null)
+            {
+                if (tabId == "main") _panelMain.RemoveFromClassList("tabs__panel--hidden");
+                else _panelMain.AddToClassList("tabs__panel--hidden");
+            }
+            if (_panelUpgrades != null)
+            {
+                if (tabId == "upgrades") _panelUpgrades.RemoveFromClassList("tabs__panel--hidden");
+                else _panelUpgrades.AddToClassList("tabs__panel--hidden");
+            }
+            if (_panelProgress != null)
+            {
+                if (tabId == "progress") _panelProgress.RemoveFromClassList("tabs__panel--hidden");
+                else _panelProgress.AddToClassList("tabs__panel--hidden");
+            }
+
+            if (_tabMain != null)
+            {
+                if (tabId == "main") _tabMain.AddToClassList("tabs__tab--active");
+                else _tabMain.RemoveFromClassList("tabs__tab--active");
+            }
+            if (_tabUpgrades != null)
+            {
+                if (tabId == "upgrades") _tabUpgrades.AddToClassList("tabs__tab--active");
+                else _tabUpgrades.RemoveFromClassList("tabs__tab--active");
+            }
+            if (_tabProgress != null)
+            {
+                if (tabId == "progress") _tabProgress.AddToClassList("tabs__tab--active");
+                else _tabProgress.RemoveFromClassList("tabs__tab--active");
+            }
         }
 
         private void ApplySectionHeaders()
@@ -206,9 +290,9 @@ namespace GameEngine.Game.UI
             if (labels == null)
                 return;
 
-            if (labels.TryGetValue("resources", out var resKey) && _sectionResources != null)
+            if (labels.TryGetValue("resources", out var resKey) && _resourcesBar != null)
             {
-                var header = _sectionResources.Q<Label>();
+                var header = _resourcesBar.Q<Label>("section-resources-header");
                 if (header != null)
                     header.text = _bootstrap.Localization?.GetString(resKey) ?? resKey;
             }
@@ -239,29 +323,6 @@ namespace GameEngine.Game.UI
                 var header = _sectionQuests.Q<Label>();
                 if (header != null)
                     header.text = _bootstrap.Localization?.GetString(questKey) ?? questKey;
-            }
-        }
-
-        private void ApplySectionOrder()
-        {
-            var order = _bootstrap?.HudConfig?.SectionOrder;
-            if (order == null || order.Count == 0 || _hudRoot == null)
-                return;
-
-            var sections = new Dictionary<string, VisualElement>();
-            if (_sectionResources != null) sections["resources"] = _sectionResources;
-            if (_sectionUpgrades != null) sections["upgrades"] = _sectionUpgrades;
-            if (_sectionActions != null) sections["actions"] = _sectionActions;
-            if (_sectionArtifacts != null) sections["artifacts"] = _sectionArtifacts;
-            if (_sectionQuests != null) sections["quests"] = _sectionQuests;
-
-            foreach (var s in sections.Values)
-                s.RemoveFromHierarchy();
-
-            foreach (var id in order)
-            {
-                if (sections.TryGetValue(id, out var section))
-                    _hudRoot.Add(section);
             }
         }
 
@@ -353,7 +414,9 @@ namespace GameEngine.Game.UI
             {
                 foreach (var prodId in manualIds)
                 {
-                    var btn = new Button { text = "Tap" };
+                    var actionKey = "action." + prodId;
+                    var btnText = _bootstrap?.Localization?.GetString(actionKey) ?? prodId;
+                    var btn = new Button { text = btnText };
                     btn.AddToClassList("hud-action-button");
                     btn.AddToClassList("hud-action-button--primary");
                     var capture = prodId;

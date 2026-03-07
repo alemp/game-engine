@@ -1,12 +1,13 @@
 {
   "rewards": [
     {
-      "id": "drone",
+      "id": "api_bonus",
       "intervalSeconds": 120,
       "jitterSeconds": 30,
       "rewards": [
-        { "resourceId": "gold", "amount": 10, "weight": 70 },
-        { "resourceId": "souls", "amount": 1, "weight": 30 }
+        { "resourceId": "tokens", "amount": 10, "weight": 70 },
+        { "resourceId": "experience", "amount": 5, "weight": 20 },
+        { "resourceId": "souls", "amount": 1, "weight": 10 }
       ]
     }
   ]
