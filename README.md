@@ -10,6 +10,7 @@ Modular mobile game engine focused on **Idle Games**, built with Unity. One engi
 |----------|---------|
 | [**MASTER_SPEC.md**](MASTER_SPEC.md) | Full specification, architecture, and implementation decisions |
 | [**/docs/NEXT_STEPS.md**](docs/NEXT_STEPS.md) | Implementation tracker with checkboxes |
+| [**/docs/AI_IDLE_GAME_DESIGN.md**](docs/AI_IDLE_GAME_DESIGN.md) | AI Idle – game design document (tokens, agentes, carreira/prestige) |
 | [**/docs/**](docs/) | Architecture notes, API docs, and other project documentation |
 
 ---

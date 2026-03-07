@@ -48,7 +48,7 @@
 - **IdleModule** – Production chains (multiple inputs → one output, or generators with no input)
 - **ThemeTokens** – ScriptableObject for design tokens
 - **Theme loading** – theme.json from Definitions/, applied to UI at runtime via USS variables
-- **GameHUD** – UI Toolkit HUD displaying resource values
+- **GameHUD** – UI Toolkit HUD (resources, upgrades, actions, artifacts, quests)
 - **SampleIdleGame** – Full JSON config and content
 
 ## CLI Tools
@@ -57,6 +57,10 @@
 - **Simulator** – Run economy progression: `dotnet run --project Tools/Simulator -- <path-to-game-folder> <1h|24h|7d>`
 
 Example: `dotnet run --project Tools/Simulator -- UnityProject/Assets/_Games/SampleIdleGame 24h`
+
+## Game Design Docs
+
+- [AI Idle](AI_IDLE_GAME_DESIGN.md) – Design document for the AI Idle game concept (tokens, agentes, carreira via prestige)
 
 ## Next Steps
 
