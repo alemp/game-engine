@@ -27,8 +27,8 @@ The design is inspired by successful idle games but implemented generically:
 | Epic upgrades (permanent) | Upgrades that persist on prestige | 🆕 `persistsOnPrestige` on upgrades |
 | Tap/click action | Manual production trigger | 🆕 `trigger: "manual"` on production |
 | Random rewards | Periodic/chance rewards | 🆕 RandomRewardModule |
-| Tiers (e.g. egg types) | Progression tiers | 📋 Future (TierModule) |
-| Artifacts | Collectible bonuses | 📋 Future (ArtifactModule) |
+| Tiers (e.g. egg types) | Progression tiers | ✅ TierModule |
+| Artifacts | Collectible bonuses | ✅ ArtifactModule |
 
 ---
 
@@ -225,7 +225,30 @@ Collectible items that provide passive bonuses (e.g. production multiplier). Art
 
 ### Integration
 - [x] Quest rewards can grant artifacts (rewardArtifactId in QuestEntry)
-- [ ] UI: Tier ascend button, Artifact collection display
+- [x] UI: Tier ascend button, Artifact collection display
+- [x] UI: Quests panel (progress bars, claim button, hud.json section)
+
+### Quests HUD (`hud.json`)
+
+The Quests section is configurable via `Definitions/hud.json`:
+
+```json
+{
+  "quests": {
+    "visible": true,
+    "order": ["reach_100_gold", "buy_first_upgrade"]
+  },
+  "sectionOrder": ["resources", "actions", "upgrades", "artifacts", "quests"],
+  "sectionLabels": {
+    "quests": "hud.section.quests"
+  }
+}
+```
+
+- **`quests.visible`**: Show/hide the quests section.
+- **`quests.order`**: Quest IDs in display order (optional; uses config default if empty).
+- **`sectionOrder`**: Include `"quests"` to show the section.
+- **`sectionLabels.quests`**: Localization key for the section header.
 
 ---
 

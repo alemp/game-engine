@@ -6,5 +6,11 @@
   "nav.main": "Main",
   "nav.upgrades": "Upgrades",
   "hud.section.resources": "Resources",
-  "hud.section.upgrades": "Upgrades"
+  "hud.section.actions": "Actions",
+  "hud.section.upgrades": "Upgrades",
+  "hud.section.artifacts": "Artifacts",
+  "hud.section.quests": "Quests",
+  "quest.reach_100_gold": "Reach 100 Gold",
+  "quest.buy_first_upgrade": "Buy first upgrade",
+  "quest.claim": "Claim"
 }

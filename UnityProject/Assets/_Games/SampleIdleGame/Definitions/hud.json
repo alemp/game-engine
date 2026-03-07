@@ -6,13 +6,18 @@
     "visible": true,
     "order": ["gold_multiplier_1", "gold_multiplier_2"]
   },
+  "quests": {
+    "visible": true,
+    "order": ["reach_100_gold", "buy_first_upgrade"]
+  },
   "layout": "wrap",
-  "sectionOrder": ["resources", "actions", "upgrades", "artifacts"],
+  "sectionOrder": ["resources", "actions", "upgrades", "artifacts", "quests"],
   "sectionLabels": {
     "resources": "hud.section.resources",
     "actions": "hud.section.actions",
     "upgrades": "hud.section.upgrades",
-    "artifacts": "hud.section.artifacts"
+    "artifacts": "hud.section.artifacts",
+    "quests": "hud.section.quests"
   },
   "actionsVisible": true,
   "artifactsVisible": true,

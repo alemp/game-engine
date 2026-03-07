@@ -11,5 +11,9 @@
   "hud.section.resources": "Recursos",
   "hud.section.actions": "Ações",
   "hud.section.upgrades": "Melhorias",
-  "hud.section.artifacts": "Artefatos"
+  "hud.section.artifacts": "Artefatos",
+  "hud.section.quests": "Missões",
+  "quest.reach_100_gold": "Alcance 100 Ouro",
+  "quest.buy_first_upgrade": "Compre a primeira melhoria",
+  "quest.claim": "Reivindicar"
 }

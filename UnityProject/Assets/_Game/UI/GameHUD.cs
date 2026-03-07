@@ -3,6 +3,7 @@ using System.Linq;
 using GameEngine.Core.Economy;
 using GameEngine.Game.Bootstrap;
 using GameEngine.Modules.Idle;
+using GameEngine.Modules.Quests;
 using GameEngine.Modules.Upgrades;
 using GameEngine.UI.Components;
 using GameEngine.UI.Theme;
@@ -21,19 +22,23 @@ namespace GameEngine.Game.UI
 
         private IdleModule _idleModule;
         private UpgradeModule _upgradeModule;
+        private QuestModule _questModule;
         private VisualElement _root;
         private VisualElement _hudRoot;
         private VisualElement _resourceContainer;
         private VisualElement _upgradesContainer;
         private VisualElement _actionsContainer;
         private VisualElement _artifactsContainer;
+        private VisualElement _questsContainer;
         private VisualElement _sectionResources;
         private VisualElement _sectionUpgrades;
         private VisualElement _sectionActions;
         private VisualElement _sectionArtifacts;
+        private VisualElement _sectionQuests;
         private bool _resourcesBound;
         private bool _upgradesBound;
         private bool _actionsBound;
+        private bool _questsBound;
         private int _lastArtifactCount = -1;
 
         private void OnEnable()
@@ -65,6 +70,7 @@ namespace GameEngine.Game.UI
 
             _idleModule = _bootstrap.IdleModule;
             _upgradeModule = _bootstrap.UpgradeModule;
+            _questModule = _bootstrap.QuestModule;
             if (_idleModule == null)
                 return;
 
@@ -74,10 +80,12 @@ namespace GameEngine.Game.UI
             _upgradesContainer = _root.Q<VisualElement>("upgrades-container");
             _actionsContainer = _root.Q<VisualElement>("actions-container");
             _artifactsContainer = _root.Q<VisualElement>("artifacts-container");
+            _questsContainer = _root.Q<VisualElement>("quests-container");
             _sectionResources = _root.Q<VisualElement>("section-resources");
             _sectionUpgrades = _root.Q<VisualElement>("section-upgrades");
             _sectionActions = _root.Q<VisualElement>("section-actions");
             _sectionArtifacts = _root.Q<VisualElement>("section-artifacts");
+            _sectionQuests = _root.Q<VisualElement>("section-quests");
 
             if (_bootstrap.Theme != null)
                 ThemeApplier.Apply(_root, _bootstrap.Theme);
@@ -87,6 +95,7 @@ namespace GameEngine.Game.UI
             BindActionButtons();
             BindUpgradeButtons();
             BindArtifacts();
+            BindQuests();
         }
 
         private void TryBind()
@@ -99,6 +108,7 @@ namespace GameEngine.Game.UI
 
             _idleModule = _bootstrap.IdleModule;
             _upgradeModule = _bootstrap.UpgradeModule;
+            _questModule = _bootstrap.QuestModule;
 
             if (GetComponent<GameRoot>() != null)
                 return;
@@ -120,10 +130,12 @@ namespace GameEngine.Game.UI
             _upgradesContainer = _root.Q<VisualElement>("upgrades-container");
             _actionsContainer = _root.Q<VisualElement>("actions-container");
             _artifactsContainer = _root.Q<VisualElement>("artifacts-container");
+            _questsContainer = _root.Q<VisualElement>("quests-container");
             _sectionResources = _root.Q<VisualElement>("section-resources");
             _sectionUpgrades = _root.Q<VisualElement>("section-upgrades");
             _sectionActions = _root.Q<VisualElement>("section-actions");
             _sectionArtifacts = _root.Q<VisualElement>("section-artifacts");
+            _sectionQuests = _root.Q<VisualElement>("section-quests");
 
             if (_bootstrap.Theme != null)
                 ThemeApplier.Apply(_root, _bootstrap.Theme);
@@ -133,6 +145,7 @@ namespace GameEngine.Game.UI
             BindActionButtons();
             BindUpgradeButtons();
             BindArtifacts();
+            BindQuests();
         }
 
         private void TryLoadTemplateFromConfig()
@@ -167,11 +180,20 @@ namespace GameEngine.Game.UI
                     _sectionUpgrades.style.display = (hud?.Upgrades?.Visible ?? true) ? DisplayStyle.Flex : DisplayStyle.None;
             }
 
+            if (_questsContainer != null)
+            {
+                _questsContainer.style.flexDirection = layout == "column" ? FlexDirection.Column : FlexDirection.Row;
+                _questsContainer.style.flexWrap = layout == "wrap" ? Wrap.Wrap : Wrap.NoWrap;
+            }
+
             if (_sectionActions != null)
                 _sectionActions.style.display = (hud?.ActionsVisible ?? true) ? DisplayStyle.Flex : DisplayStyle.None;
 
             if (_sectionArtifacts != null)
                 _sectionArtifacts.style.display = (hud?.ArtifactsVisible ?? true) ? DisplayStyle.Flex : DisplayStyle.None;
+
+            if (_sectionQuests != null)
+                _sectionQuests.style.display = (hud?.Quests?.Visible ?? true) ? DisplayStyle.Flex : DisplayStyle.None;
 
             ApplySectionHeaders();
             ApplySectionOrder();
@@ -211,6 +233,13 @@ namespace GameEngine.Game.UI
                 if (header != null)
                     header.text = _bootstrap.Localization?.GetString(artKey) ?? artKey;
             }
+
+            if (labels.TryGetValue("quests", out var questKey) && _sectionQuests != null)
+            {
+                var header = _sectionQuests.Q<Label>();
+                if (header != null)
+                    header.text = _bootstrap.Localization?.GetString(questKey) ?? questKey;
+            }
         }
 
         private void ApplySectionOrder()
@@ -224,6 +253,7 @@ namespace GameEngine.Game.UI
             if (_sectionUpgrades != null) sections["upgrades"] = _sectionUpgrades;
             if (_sectionActions != null) sections["actions"] = _sectionActions;
             if (_sectionArtifacts != null) sections["artifacts"] = _sectionArtifacts;
+            if (_sectionQuests != null) sections["quests"] = _sectionQuests;
 
             foreach (var s in sections.Values)
                 s.RemoveFromHierarchy();
@@ -246,6 +276,7 @@ namespace GameEngine.Game.UI
             UpdateResourceValues();
             UpdateUpgradeButtons();
             UpdateActionButtons();
+            UpdateQuestRows();
 
             var artifactCount = _bootstrap?.ArtifactModule?.GetCollectedIds().Count ?? 0;
             if (artifactCount != _lastArtifactCount)
@@ -393,6 +424,123 @@ namespace GameEngine.Game.UI
 
                 _artifactsContainer.Add(badge);
             }
+        }
+
+        private void BindQuests()
+        {
+            if (_questsContainer == null || _questModule == null)
+                return;
+
+            if (!(_bootstrap?.HudConfig?.Quests?.Visible ?? true))
+            {
+                _questsBound = true;
+                return;
+            }
+
+            _questsContainer.Clear();
+            _questsBound = false;
+
+            var ordered = GetOrderedQuestIds();
+            var claimText = _bootstrap?.Localization?.GetString("quest.claim") ?? "Claim";
+
+            foreach (var questId in ordered)
+            {
+                var quest = _questModule.GetQuest(questId);
+                if (quest == null)
+                    continue;
+
+                var row = new QuestRow
+                {
+                    QuestId = questId
+                };
+
+                var displayKey = !string.IsNullOrEmpty(quest.DisplayKey)
+                    ? quest.DisplayKey
+                    : $"quest.{questId}";
+
+                if (_bootstrap.Localization != null)
+                {
+                    var localized = _bootstrap.Localization.GetString(displayKey);
+                    row.SetDisplayName(localized);
+                }
+                else
+                {
+                    row.SetDisplayName(displayKey);
+                }
+
+                row.SetClaimButtonText(claimText);
+
+                var progress = _questModule.GetProgress(questId);
+                var isCompleted = _questModule.IsCompleted(questId);
+
+                row.SetProgress(progress);
+                if (isCompleted)
+                {
+                    row.SetCompleted(true);
+                }
+                else
+                {
+                    row.SetCanClaim(progress >= 1.0);
+                }
+
+                var questIdCapture = questId;
+                row.SetClaimCallback(() =>
+                {
+                    if (_questModule.TryClaimReward(questIdCapture))
+                    {
+                        BindArtifacts();
+                        row.SetCompleted(true);
+                    }
+                });
+
+                _questsContainer.Add(row);
+            }
+
+            _questsBound = true;
+        }
+
+        private IEnumerable<string> GetOrderedQuestIds()
+        {
+            var allIds = _questModule.GetQuestIds().ToList();
+            var order = _bootstrap?.HudConfig?.Quests?.Order;
+            if (order != null && order.Count > 0)
+            {
+                var set = order.ToHashSet();
+                foreach (var id in order)
+                    if (allIds.Contains(id))
+                        yield return id;
+                foreach (var id in allIds)
+                    if (!set.Contains(id))
+                        yield return id;
+            }
+            else
+            {
+                foreach (var id in allIds)
+                    yield return id;
+            }
+        }
+
+        private void UpdateQuestRows()
+        {
+            if (!_questsBound || _questsContainer == null || _questModule == null)
+                return;
+
+            _questsContainer.Query<QuestRow>().ForEach(row =>
+            {
+                var questId = row.QuestId;
+                if (string.IsNullOrEmpty(questId))
+                    return;
+
+                if (_questModule.IsCompleted(questId))
+                {
+                    row.SetCompleted(true);
+                    return;
+                }
+
+                var progress = _questModule.GetProgress(questId);
+                row.SetProgress(progress);
+                row.SetCanClaim(progress >= 1.0);
+            });
         }
 
         private IEnumerable<string> GetOrderedResourceIds()

@@ -14,17 +14,20 @@ namespace GameEngine.Core.Config.Schemas
         [JsonProperty("upgrades")]
         public HudUpgradesSchema Upgrades { get; set; }
 
+        [JsonProperty("quests")]
+        public HudQuestsSchema Quests { get; set; }
+
         [JsonProperty("layout")]
         public string Layout { get; set; } = "wrap";
 
         /// <summary>
-        /// Section order: "resources", "upgrades", "actions", "artifacts". Defines display order and which sections to show.
+        /// Section order: "resources", "upgrades", "actions", "artifacts", "quests". Defines display order and which sections to show.
         /// </summary>
         [JsonProperty("sectionOrder")]
         public List<string> SectionOrder { get; set; }
 
         /// <summary>
-        /// Section label keys for localization. Keys: "resources", "upgrades", "actions", "artifacts".
+        /// Section label keys for localization. Keys: "resources", "upgrades", "actions", "artifacts", "quests".
         /// </summary>
         [JsonProperty("sectionLabels")]
         public Dictionary<string, string> SectionLabels { get; set; }
@@ -40,6 +43,12 @@ namespace GameEngine.Core.Config.Schemas
         /// </summary>
         [JsonProperty("artifactsVisible")]
         public bool ArtifactsVisible { get; set; } = true;
+
+        /// <summary>
+        /// Show quests section. Default true.
+        /// </summary>
+        [JsonProperty("questsVisible")]
+        public bool QuestsVisible { get; set; } = true;
 
         /// <summary>
         /// Use card-based layout for resources and upgrades. "card" | "flat".
@@ -64,6 +73,18 @@ namespace GameEngine.Core.Config.Schemas
 
         /// <summary>
         /// Upgrade IDs in display order. If null/empty, use config default order.
+        /// </summary>
+        [JsonProperty("order")]
+        public List<string> Order { get; set; }
+    }
+
+    public sealed class HudQuestsSchema
+    {
+        [JsonProperty("visible")]
+        public bool Visible { get; set; } = true;
+
+        /// <summary>
+        /// Quest IDs in display order. If null/empty, use config default order.
         /// </summary>
         [JsonProperty("order")]
         public List<string> Order { get; set; }

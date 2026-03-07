@@ -112,9 +112,9 @@ Checkboxes track implementation progress. Update this file when completing each 
 ### Phase C – Module UI
 
 - [x] Prestige: button + prestige currency display in HUD
-- [ ] Quests: panel with list, progress bars, claim button
+- [x] Quests: panel with list, progress bars, claim button
 - [ ] Events: active event banner + countdown timer
-- [ ] hud.json / ui.json: configurable section visibility per module
+- [x] hud.json: configurable section visibility (resources, upgrades, actions, artifacts, quests)
 
 ### Phase D – Polish
 

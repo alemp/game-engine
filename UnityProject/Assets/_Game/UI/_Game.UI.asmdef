@@ -7,6 +7,7 @@
         "GameEngine.Game.Bootstrap",
         "GameEngine.Modules.Idle",
         "GameEngine.Modules.Upgrades",
+        "GameEngine.Modules.Quests",
         "GameEngine.Modules.Prestige",
         "GameEngine.Modules.Tiers",
         "GameEngine.Modules.Artifacts",

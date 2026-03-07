@@ -1,6 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEngine.UIElements" xmlns:ge="GameEngine.UI.Components" editor-extension-mode="False">
     <Style src="../../../_Engine/UI/Components/ResourceDisplay.uss" />
     <Style src="../../../_Engine/UI/Components/UpgradeButton.uss" />
+    <Style src="../../../_Engine/UI/Components/QuestRow.uss" />
     <Style src="../../../_Engine/UI/Components/HudSections.uss" />
     <Style src="../../../_Engine/UI/Components/ActionButtons.uss" />
     <ui:VisualElement name="hud-root" style="flex-grow: 1; width: 100%; padding: 20px; flex-direction: column;">
@@ -26,6 +27,12 @@
             <ui:Label name="section-artifacts-header" class="hud-section__header" text="Artifacts" />
             <ui:VisualElement name="artifacts-container" class="hud-section__content hud-section__content--card">
                 <!-- ArtifactDisplay elements added dynamically -->
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="section-quests" class="hud-section">
+            <ui:Label name="section-quests-header" class="hud-section__header" text="Quests" />
+            <ui:VisualElement name="quests-container" class="hud-section__content hud-section__content--card">
+                <!-- QuestRow elements added dynamically -->
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
